@@ -1,0 +1,107 @@
+[
+    {
+      "id": 1,
+      "name": "ENSIAS (École Nationale Supérieure d'Informatique et d'Analyse des Systèmes)"
+    },
+    {
+      "id": 2,
+      "name": "EMI (École Mohammadia d'Ingénieurs)"
+    },
+    {
+      "id": 3,
+      "name": "EHTP (École Hassania des Travaux Publics)"
+    },
+    {
+      "id": 4,
+      "name": "ENSA de Tanger (École Nationale des Sciences Appliquées de Tanger)"
+    },
+    {
+      "id": 5,
+      "name": "ENSA de Agadir (École Nationale des Sciences Appliquées d'Agadir)"
+    },
+    {
+      "id": 6,
+      "name": "ENSA de Marrakech (École Nationale des Sciences Appliquées de Marrakech)"
+    },
+    {
+      "id": 7,
+      "name": "ENSA de Oujda (École Nationale des Sciences Appliquées d'Oujda)"
+    },
+    {
+      "id": 8,
+      "name": "ENSA de Berrechid (École Nationale des Sciences Appliquées de Berrechid)"
+    },
+    {
+      "id": 9,
+      "name": "ENSA de Safi (École Nationale des Sciences Appliquées de Safi)"
+    },
+    {
+      "id": 10,
+      "name": "ENSA de Fès (École Nationale des Sciences Appliquées de Fès)"
+    },
+    {
+      "id": 11,
+      "name": "ENSA de Khouribga (École Nationale des Sciences Appliquées de Khouribga)"
+    },
+    {
+      "id": 12,
+      "name": "ENSA d'Al Hoceima (École Nationale des Sciences Appliquées d'Al Hoceima)"
+    },
+    {
+      "id": 13,
+      "name": "ENSA d'El Jadida (École Nationale des Sciences Appliquées d'El Jadida)"
+    },
+    {
+      "id": 14,
+      "name": "ENSA de Kénitra (École Nationale des Sciences Appliquées de Kénitra)"
+    },
+    {
+      "id": 15,
+      "name": "ENSA de Tétouan (École Nationale des Sciences Appliquées de Tétouan)"
+    },
+    {
+      "id": 16,
+      "name": "ENSA de Béni Mellal (École Nationale des Sciences Appliquées de Béni Mellal)"
+    },
+    {
+      "id": 17,
+      "name": "Faculté des Sciences de l'Université Mohammed V"
+    },
+    {
+      "id": 18,
+      "name": "Faculté des Sciences de l'Université Hassan II"
+    },
+    {
+      "id": 19,
+      "name": "Faculté des Sciences de l'Université Moulay Ismail"
+    },
+    {
+      "id": 20,
+      "name": "Faculté des Sciences de l'Université Ibn Tofail"
+    },
+    {
+      "id": 21,
+      "name": "Faculté des Sciences de l'Université Ibn Zohr"
+    },
+    {
+      "id": 22,
+      "name": "Faculté des Sciences de l'Université Mohamed Premier"
+    },
+    {
+      "id": 23,
+      "name": "Faculté des Sciences de l'Université Mohammed V de Rabat"
+    },
+    {
+      "id": 24,
+      "name": "Faculté des Sciences de l'Université Moulay Slimane"
+    },
+    {
+      "id": 25,
+      "name": "Faculté des Sciences de l'Université de l'Al Quaraouiyine"
+    },
+    {
+      "id": 26,
+      "name": "Faculté des Sciences de l'Université de Hassan II Casablanca Ain Chok"
+    }
+  ]
+  

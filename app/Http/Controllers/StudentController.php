@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
@@ -28,7 +29,7 @@ class StudentController extends Controller
             $user = new User();
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
-            // Set other user attributes
+            $user->role = "student";
             $user->save();
 
             // Create the student record and associate it with the user
@@ -45,9 +46,8 @@ class StudentController extends Controller
             $student->save();
         });
 
-        // Optionally, perform additional actions after registration
-
-        return redirect()->route('home'); // Redirect to the dashboard or another appropriate page
+        // Redirect to the login page after successful registration
+        return Inertia::location(route('login'));
     }
     
 

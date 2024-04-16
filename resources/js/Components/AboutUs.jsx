@@ -54,7 +54,7 @@ const AboutUs = () => {
                   brand. Secure a consistent brand image with a domain name that
                   matches your business.
                 </p>
-                <button className="mt-5 relative w-[200px] border-2 border-black bg-transparent px-5 py-2.5 font-medium text-[#00df9a] transition-all duration-700 ease-in-out rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black hover:bg-gray-200 hover:text-[#00df9a] hover:scale-105 before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:origin-top-left before:scale-x-0 before:bg-black before:transition-transform before:duration-700 before:content-[''] hover:before:scale-x-100">
+                <button className="mt-5 relative w-[200px] border-2 border-white bg-transparent px-5 py-2.5 font-medium text-[#00df9a] transition-all duration-700 ease-in-out rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black hover:bg-gray-200 hover:text-[#00df9a] hover:scale-105 before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:origin-top-left before:scale-x-0 before:bg-white before:transition-transform before:duration-700 before:content-[''] hover:before:scale-x-100">
                 Get started
                 </button>
               </div>

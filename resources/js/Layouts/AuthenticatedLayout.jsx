@@ -4,6 +4,8 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
+import { IoMdNotifications } from "react-icons/io";
+import { IoChatboxEllipsesSharp } from "react-icons/io5";
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -22,12 +24,21 @@ export default function Authenticated({ user, header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Dashboard
+                                    Page d'accueil
                                 </NavLink>
                             </div>
+                            
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
+                        <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <button className="icon-button bg-gray-200 hover:bg-gray-300 transition-colors duration-200 rounded-full p-2" title="Notifications">
+                                    <IoMdNotifications size={24} className=""/>
+                                </button>
+                                <button className="icon-button bg-gray-200 hover:bg-gray-300 transition-colors duration-200 rounded-full p-2" title="Chat">
+                                    <IoChatboxEllipsesSharp size={24} className=""/>
+                                </button>
+                            </div>
                             <div className="ms-3 relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
@@ -93,7 +104,7 @@ export default function Authenticated({ user, header, children }) {
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
-                            Dashboard
+                            Page d'accueil
                         </ResponsiveNavLink>
                     </div>
 

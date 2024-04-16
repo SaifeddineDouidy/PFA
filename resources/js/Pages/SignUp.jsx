@@ -4,24 +4,26 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react'; 
+import {Inertia} from '@inertiajs/inertia'; // Import usePage
 import StudentFields2 from '../Components/StudentFields2';
 import CompanyFields2 from '../Components/CompanyFields2';
 import axios from 'axios';
 
 export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, processing, errors, } = useForm({
         _token: '', 
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
     });
+    const { url } = usePage(); // Get the current URL using usePage()
 
-    const [csrfToken, setCsrfToken] = useState(''); // State to store the CSRF token
+    const [csrfToken, setCsrfToken] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
-        // Fetch the CSRF token when the component mounts
         const fetchCsrfToken = async () => {
             try {
                 const response = await axios.get('/csrf-token');
@@ -34,11 +36,7 @@ export default function Register() {
         fetchCsrfToken();
     }, []);
 
-    useEffect(() => {
-        return () => {
-            reset('password', 'password_confirmation');
-        };
-    }, []);
+
 
     const [accountType, setAccountType] = useState('student');
 
@@ -66,13 +64,19 @@ export default function Register() {
             const response = await axios.post(endpoint, payload, {
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": csrfToken, // Use the CSRF token from your state
+                    "X-CSRF-TOKEN": csrfToken,
                 },
             });
 
             console.log('Registration successful:', response.data);
+            setSuccessMessage('Registration successful');
+
+            // Redirect to the login page after successful registration
+            Inertia.visit('/login');
+
         } catch (error) {
             console.error('Registration failed:', error.response ? error.response.data : error.message);
+            console.log('Registration :', error.data);
         }
     };
 
@@ -124,7 +128,7 @@ export default function Register() {
                             id="email"
                             name="email"
                             type="email"
-                            value={data.email || ''} // Access email from data object
+                            value={data.email || ''}
                             onChange={(e) => setData({ ...data, email: e.target.value })}
                             className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                             required
@@ -138,7 +142,7 @@ export default function Register() {
                             id="password"
                             name="password"
                             type="password"
-                            value={data.password || ''} // Access password from data object
+                            value={data.password || ''}
                             onChange={(e) => setData({ ...data, password: e.target.value })}
                             className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                             required
@@ -153,10 +157,10 @@ export default function Register() {
                             id="password_confirmation"
                             type="password"
                             name="password_confirmation"
-                            value={data.password_confirmation || ''} // Access password_confirmation from data object
+                            value={data.password_confirmation || ''}
                             className="mt-1 block w-full"
                             autoComplete="new-password"
-                            onChange={(e) => setData({ ...data, password_confirmation: e.target.value })} // Update state correctly
+                            onChange={(e) => setData({ ...data, password_confirmation: e.target.value })}
                             required
                         />
 
@@ -177,6 +181,8 @@ export default function Register() {
                             Register
                         </PrimaryButton>
                     </div>
+                    
+
                 </form>
             </div>
         </GuestLayout>

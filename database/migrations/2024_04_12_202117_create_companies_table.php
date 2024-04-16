@@ -22,9 +22,10 @@ return new class extends Migration
             $table->string('password');
             $table->string('phoneNumber');
             $table->string('country');
-            $table->string('region');
-            $table->string('city');
             $table->string('companyName');
+            $table->string('companySize');
+            $table->string('jobTitle');
+            $table->string('desiredRecruitments');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Define foreign key constraint
 

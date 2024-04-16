@@ -31,7 +31,11 @@ export default function Login({ status, canResetPassword }) {
             <Head title="Log in" />
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
-
+            
+            <div className="text-left">
+                    <h1 className="text-4xl font-bold mb-4">Login</h1>
+                    <p className="text-gray-500 mb-8">Welcome! Please enter your details.</p>
+            </div>
             <form onSubmit={submit}>
                 <div>
                     <InputLabel htmlFor="email" value="Email" />
@@ -87,10 +91,20 @@ export default function Login({ status, canResetPassword }) {
                         </Link>
                     )}
 
+                    
+                        <Link
+                            href={route('signup')}
+                            className=" ml-6 underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        >
+                            Not registered?
+                        </Link>
+                   
+
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Log in
                     </PrimaryButton>
                 </div>
+
             </form>
         </GuestLayout>
     );

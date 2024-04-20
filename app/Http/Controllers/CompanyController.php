@@ -12,7 +12,7 @@ class CompanyController extends Controller
 {
     public function register(Request $request)
     {
-        // Validate additional student-specific fields
+        // Validate additional company-specific fields
         $request->validate([
             'firstname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
@@ -21,10 +21,10 @@ class CompanyController extends Controller
             'companyName' => 'required',
             'companySize' => 'required',
             'jobTitle' => 'required',
-            'desiredRecruitments' => 'required',
+            'aboutDesc' => 'required',
             
 
-            // Add other student-specific fields here
+            // Add other company-specific fields here
         ]);
 
         // Begin a database transaction
@@ -36,7 +36,7 @@ class CompanyController extends Controller
             $user->role = "company";
             $user->save();
 
-            // Create the student record and associate it with the user
+            // Create the company record and associate it with the user
             $company = new Company();
             $company->user_id = $user->id;
             $company->firstname = $request->firstname;
@@ -48,14 +48,20 @@ class CompanyController extends Controller
             $company->companyName = $request->companyName;
             $company->companySize = $request->companySize;
             $company->jobTitle = $request->jobTitle;
-            $company->desiredRecruitments = $request->desiredRecruitments;
-            // Set other student attributes
+            $company->aboutDesc = $request->aboutDesc;
+            // Set other company attributes
             $company->save();
         });
 
         // Optionally, perform additional actions after registration
 
-        return redirect()->route('home'); // Redirect to the dashboard or another appropriate page
+        return redirect()->route('login'); // Redirect to the dashboard or another appropriate page
+    }
+    // Return the Fetched Data from the Database
+    public function index()
+    {
+        $comapnies = Company::all();
+        return $comapnies;
     }
     
 

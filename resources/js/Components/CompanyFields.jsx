@@ -4,7 +4,7 @@ import 'react-phone-input-2/lib/style.css';
 import { CitySelect, CountrySelect, StateSelect, } from 'react-country-state-city';
 import "react-country-state-city/dist/react-country-state-city.css";
 
-const CompanyFields = ({ register, errors ,firstName, setFirstName, lastName, setLastName,email, setEmail, password, setPassword,  phoneNumber, setPhoneNumber, country, setCountry, region, setRegion, city, setCity, companyName, setCompanyName, companySize, setCompanySize, jobTitle, setJobTitle, desiredRecruitments, setDesiredRecruitments }) => {
+const CompanyFields = ({ register, errors ,firstName, setFirstName, lastName, setLastName,email, setEmail, password, setPassword,  phoneNumber, setPhoneNumber, country, setCountry, region, setRegion, city, setCity, companyName, setCompanyName, companySize, setCompanySize, jobTitle, setJobTitle, aboutDesc, setaboutDesc }) => {
 
   return (
     <>

@@ -6,12 +6,22 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\JobController;
+use App\Models\Job;
+use App\Models\Company;
 use Illuminate\Http\Request;
 
 // Route to get the CSRF token
 Route::get('/csrf-token', function (Request $request) {
     return response()->json(['csrfToken' => csrf_token()]);
 });
+
+// Route to fetch the Jobs data
+Route::get('/posts', [JobController::class, 'index'])->name('jobs.index');
+
+// Route to fetch the Jobs data
+Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
+
 
 // Welcome page route
 Route::get('/home', function () {
@@ -52,6 +62,22 @@ Route::get('/company/dashboard', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// JOb Details Route
+Route::get('/detailjobs/{id}', function ($id) {
+    // Fetch the job data from your database based on the provided $id
+    $job = Job::findOrFail($id);
+    $company = $job->company;
+
+    // Pass the job data to the DetailedJob component
+    return Inertia::render('DetailedJob', [
+        'job' => $job,
+        'company' => $company,
+        'auth' => [
+            'user' => auth()->user(),
+        ],
+    ]);
+})->name('detail-jobs');
 
 // Routes protected by auth middleware
 Route::middleware('auth')->group(function () {

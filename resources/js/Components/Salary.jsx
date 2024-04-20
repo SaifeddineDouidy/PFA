@@ -2,50 +2,57 @@ import React from 'react';
 import SalaryButtons from './SalaryButtons';
 import InputFields from './InputFields';
 
-const Salary = ({ handleChange, handleClick }) => {
+const Salary = ({ handleFilterChange }) => {
  return (
     <div>
       <h4 className='text-lg font-medium mb-2'>Salary</h4>
       <div className='salary-buttons-container mb-4'> {/* Added a class for styling */}
-        <SalaryButtons onClickHandler={handleClick} value="Hourly" title="Hourly"/>
-        <SalaryButtons onClickHandler={handleClick} value="Monthly" title="Monthly"/>
-        <SalaryButtons onClickHandler={handleClick} value="Yearly" title="Yearly"/>
+        <SalaryButtons onClickHandler={handleFilterChange} value="Hourly" title="Hourly"/>
+        <SalaryButtons onClickHandler={handleFilterChange} value="Monthly" title="Monthly"/>
+        <SalaryButtons onClickHandler={handleFilterChange} value="Yearly" title="Yearly"/>
       </div>
 
       <div>
         <label className="sidebar-label-container">
           <input 
             type="radio" 
-            name='test' 
-            id='test' 
+            name='salary' 
+            id='all-salaries' 
             value="" 
-            onChange={handleChange} />
-          <span className='checkmark'></span>All
+            onChange={(event) => handleFilterChange('salary', event.target.value)} />
+          <span className='checkmark ml-2'></span>All
         </label>
-
+      </div>
+      <div>
         <InputFields 
-          name='test' 
-          handleChange={handleChange} 
-          value={30000} 
-          title="&lt; 30000"
+          name='salary' 
+          handleFilterChange={handleFilterChange} 
+          value={3000} 
+          title="&lt; 3000"
         />
+      </div>
+      <div>
         <InputFields 
-          name='test' 
-          handleChange={handleChange} 
-          value={50000} 
-          title="&lt; 50000"
+          name='salary' 
+          handleFilterChange={handleFilterChange} 
+          value={5000} 
+          title="&lt; 5000"
         />
+      </div>
+      <div>
         <InputFields 
-          name='test' 
-          handleChange={handleChange} 
-          value={80000} 
-          title="&lt; 80000"
+          name='salary' 
+          handleFilterChange={handleFilterChange} 
+          value={8000} 
+          title="&lt; 8000"
         />
+      </div>
+      <div>
         <InputFields 
-          name='test' 
-          handleChange={handleChange} 
-          value={100000} 
-          title="&lt; 100000"
+          name='salary' 
+          handleFilterChange={handleFilterChange} 
+          value={12000} 
+          title="&lt; 12000"
         />
       </div>
     </div>

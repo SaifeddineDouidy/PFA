@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('companyName');
             $table->string('companySize');
             $table->string('jobTitle');
-            $table->string('desiredRecruitments');
+            $table->longText('aboutDesc');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Define foreign key constraint
 

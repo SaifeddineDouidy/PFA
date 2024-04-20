@@ -10,7 +10,7 @@ class Company extends Model
     use HasFactory;
 
     // Define the fields that are fillable
-    protected $fillable = ['firstname', 'lastname', 'email', 'password', 'phoneNumber', 'country', 'companyName', 'companySize', 'jobTitle', 'desiredRecruitments'];
+    protected $fillable = ['firstname', 'lastname', 'email', 'password', 'phoneNumber', 'country', 'companyName', 'companySize', 'jobTitle', 'aboutDesc'];
 
     /**
      * Define a one-to-one inverse relationship with the User model.
@@ -27,7 +27,7 @@ class Company extends Model
      */
     public function jobs()
     {
-        return $this->hasMany(Jobs::class);
+        return $this->hasMany(Job::class);
     }
     
 }

@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('phoneNumber');
             $table->string('schoolName');
+            $table->string('cv_path')->nullable(); // Add CV file path column
+            $table->string('motivation_letter_path')->nullable(); // Add Motivation Letter file path column
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Define foreign key constraint
 

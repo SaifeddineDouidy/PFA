@@ -5,7 +5,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm, usePage } from '@inertiajs/react'; 
-import {Inertia} from '@inertiajs/inertia'; // Import usePage
+import {Inertia} from '@inertiajs/inertia';
 import StudentFields2 from '../Components/StudentFields2';
 import CompanyFields2 from '../Components/CompanyFields2';
 import axios from 'axios';

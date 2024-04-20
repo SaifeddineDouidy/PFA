@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id(); // Jobs id
             $table->unsignedBigInteger('company_id'); // Add company_id foreign key
             $table->string('jobTitle');
-            $table->string('minPrice');
-            $table->string('maxPrice');
+            $table->integer('minPrice');
+            $table->integer('maxPrice');
             $table->string('salaryType');
             $table->string('jobLocation');
             $table->date('postingDate');
             $table->string('experienceLevel');
             $table->string('employmentType');
             $table->longText('description');
+            $table->string('requirments');
             $table->timestamps();
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade'); // Updated reference to 'companies' table
 

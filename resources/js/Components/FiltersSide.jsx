@@ -1,17 +1,36 @@
-import React from 'react'
-import Locations from './Locations'
-import Salary from './Salary'
-import JobPostingDate from './JobPostingDate'
+import React from 'react';
+import Locations from './Locations';
+import Salary from './Salary';
+import JobPostingDate from './JobPostingDate';
+import WorkExperience from './WorkExperience';
+import EmploymentType from './EmploymentType';
 
-const FiltersSide = ({handleChange, handleClick}) => {
-  return (
+
+
+const FiltersSide = ({ handleFilterChange, clearFilters, selectedWorkExperience, selectedEmploymentType }) => {
+ return (
     <div className='space-y-5'>
+      <div className="border-b border-gray-300 pb-5">
         <h3 className='text-lg font-bold mb-2'>Filters</h3>
-        <Locations handleChange={handleChange}/>
-        <Salary handleChange={handleChange} handleClick={handleClick}/>
-        <JobPostingDate handleChange={handleChange}/>
+        <button onClick={clearFilters} className="text-[#f04b22] hover:underline">Clear Filters</button>
+      </div>
+      <div className="border-b border-gray-300 pb-5">
+        <Locations handleFilterChange={handleFilterChange} filterType="location" />
+      </div>
+      <div className="border-b border-gray-300 pb-5">
+        <Salary handleFilterChange={handleFilterChange} filterType="salary" />
+      </div>
+      <div>
+        <JobPostingDate handleFilterChange={handleFilterChange} filterType="date" />
+      </div>
+      <div>
+        <WorkExperience handleFilterChange={handleFilterChange} selectedWorkExperience={selectedWorkExperience} />
+      </div>
+      <div>
+        <EmploymentType handleFilterChange={handleFilterChange} selectedEmploymentType={selectedEmploymentType} />
+      </div>
     </div>
-  )
-}
+ );
+};
 
-export default FiltersSide
+export default FiltersSide;

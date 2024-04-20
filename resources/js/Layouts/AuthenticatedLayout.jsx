@@ -26,16 +26,17 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Page d'accueil
                                 </NavLink>
+                                
                             </div>
                             
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
-                        <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <button className="icon-button bg-gray-200 hover:bg-gray-300 transition-colors duration-200 rounded-full p-2" title="Notifications">
+                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <button className="icon-button bg-gray-200 hover:bg-blue-500 hover:text-blue transition-colors duration-200 rounded-full p-2" title="Notifications">
                                     <IoMdNotifications size={24} className=""/>
                                 </button>
-                                <button className="icon-button bg-gray-200 hover:bg-gray-300 transition-colors duration-200 rounded-full p-2" title="Chat">
+                                <button className="icon-button bg-gray-200 hover:bg-blue-500 hover:text-blue transition-colors duration-200 rounded-full p-2" title="Chat">
                                     <IoChatboxEllipsesSharp size={24} className=""/>
                                 </button>
                             </div>
@@ -105,6 +106,12 @@ export default function Authenticated({ user, header, children }) {
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Page d'accueil
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href="#" active={false}>
+                            Notifications
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href="#" active={false}>
+                            Chat
                         </ResponsiveNavLink>
                     </div>
 

@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Posts extends Model
+class Job extends Model
 {
     // Define the fields that are fillable
-    protected $fillable = ['jobTitle', 'minPrice', 'maxPrice', 'salaryType', 'jobLocation', 'postingDate', 'experienceLevel', 'employmentType', 'description'];
+    protected $fillable = ['jobTitle', 'minPrice', 'maxPrice', 'salaryType', 'jobLocation', 'postingDate', 'experienceLevel', 'employmentType', 'description', 'requirments'];
+    protected $table = 'company_jobs';
 
     /**
      * Define a many-to-one relationship with the Company model.

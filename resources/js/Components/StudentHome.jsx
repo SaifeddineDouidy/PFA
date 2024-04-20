@@ -1,142 +1,170 @@
 import React, { useState, useEffect } from 'react';
-import {Banner} from './Banner';
+import axios from 'axios'; // Ensure axios is imported
+import { Banner } from './Banner';
+import {Link} from '@inertiajs/react'; 
+
 import Cards from './Cards';
 import Posts from './Posts';
 import FiltersSide from './FiltersSide';
 
 const StudentHome = () => {
-    // State to hold the selected category for filtering posts
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    // State to hold all posts fetched from the server
     const [posts, setPosts] = useState([]);
-    // State to indicate whether the posts are currently being loaded
     const [isLoading, setIsLoading] = useState(true);
-    // State to hold the current page number for pagination
     const [currentPage, setCurrentPage] = useState(1);
-    // Number of items to display per page
     const itemsPerPage = 6;
-
-    // Fetch posts from the server when the component mounts
-    useEffect(() => {
-        setIsLoading(true); // Set loading state to true before fetching
-        fetch("/posts")
-            .then(res => res.json()) // Parse the response as JSON
-            .then(data => {
-                setPosts(data); // Update the posts state with the fetched data
-                setIsLoading(false); // Set loading state to false after fetching
-            })
-            .catch(error => {
-                console.error('Error fetching posts:', error); // Log any errors
-            });
-    }, []); // Empty dependency array means this effect runs once on component mount
-
-    // State to hold the search query
     const [query, setQuery] = useState("");
-    // Handler for input change events to update the search query
+    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [selectedSalary, setSelectedSalary] = useState(null);
+    const [selectedSalaryType, setSelectedSalaryType] = useState('');
+    const [selectedWorkExperience, setSelectedWorkExperience] = useState('');
+    const [selectedEmploymentType, setSelectedEmploymentType] = useState('');
+    const [selectedDate, setSelectedDate] = useState(null);
+
+    useEffect(() => {
+      setIsLoading(true);
+      axios.get("/posts")
+          .then(response => {
+              setPosts(response.data);
+              setIsLoading(false);
+              console.log(response.data)
+          })
+          .catch(error => console.error('Error fetching posts:', error));
+    }, []);
+
     const handleInputChange = (event) => {
         setQuery(event.target.value);
-    }
+    };
 
-    // Filter posts based on the search query
-    const filteredItems = posts.filter((post) => post.jobTitle.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    const handleLocationInputChange = (event) => {
+      setSelectedLocation(event.target.value);
+    };
+  
 
-    // Handler for radio button change events to update the selected category
-    const handleChange = (event) => {
-        setSelectedCategory(event.target.value); // Update the selected category state
-    }
+    const handleFilterChange = (filterType, value) => {
+      switch (filterType) {
+         case 'location':
+           setSelectedLocation(value);
+           break;
+         case 'salary':
+           setSelectedSalary(value);
+           break;
+         case 'salaryType':
+           setSelectedSalaryType(value);
+           break;
+         case 'date':
+           setSelectedDate(value);
+           break;
+        case 'work-exp':
+          setSelectedWorkExperience(value);
+          break;
+        case 'employment-type':
+          setSelectedEmploymentType(value);
+          break;
+         default:
+           break;
+      }
+     };
 
-    // Handler for button click events to update the selected category
-    const handleClick = (event) => {
-        setSelectedCategory(event.target.value); // Update the selected category state
-    }
-
-    // Calculate the index range
-    const calculatePageRange = () => {
+    const filteredData = (posts, selectedLocation, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, query) => {
+      let filteredPosts = [...posts];
+     
+      if (selectedLocation) {
+         filteredPosts = filteredPosts.filter(post => post.jobLocation.toLowerCase() === selectedLocation.toLowerCase());
+      }
+     
+      if (selectedSalary) {
+         filteredPosts = filteredPosts.filter(post => parseInt(post.maxPrice) <= parseInt(selectedSalary));
+      }
+     
+      if (selectedSalaryType) {
+         filteredPosts = filteredPosts.filter(post => post.salaryType.toLowerCase() === selectedSalaryType.toLowerCase());
+      }
+     
+      if (selectedDate) {
+         const selectedDateObj = new Date(selectedDate);
+         filteredPosts = filteredPosts.filter(post => new Date(post.postingDate) >= selectedDateObj);
+      }
+      
+      if (selectedWorkExperience) {
+        filteredPosts = filteredPosts.filter(post => post.experienceLevel.toLowerCase() === selectedWorkExperience.toLowerCase());
+     }
+      if (selectedEmploymentType) {
+          filteredPosts = filteredPosts.filter(post => post.employmentType.toLowerCase() === selectedEmploymentType.toLowerCase());
+      }
+     
+      if (query) {
+         filteredPosts = filteredPosts.filter(post => post.jobTitle.toLowerCase().includes(query.toLowerCase()));
+      }
+     
       const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = startIndex * itemsPerPage;
-      return(startIndex, endIndex);
-    }
+      const endIndex = startIndex + itemsPerPage;
+      filteredPosts = filteredPosts.slice(startIndex, endIndex);
+     
+      return filteredPosts.map((data, i) => <Cards key={i} data={data} />);
+     };
 
-    // Function for the next Page
+    const result = filteredData(posts, selectedLocation, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, query);
+
     const nextPage = () => {
-      if(currentPage < Math.ceil(filteredItems.length) / itemsPerPage){
-        setCurrentPage(currentPage-1);
-      }
+        if (currentPage < Math.ceil(result.length / itemsPerPage)) {
+            setCurrentPage(currentPage + 1);
+        }
     }
 
-    //Function For the previous page
-    const previousPage = () =>{
-      if(currentPage > 1)
-      {
-        setCurrentPage(currentPage-1);
-      }
-
+    const previousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
     }
 
-    // Function to filter posts based on the selected category and search query
-    // Function to filter posts based on the selected category and search query
-const filteredData = (posts, selected, query) => {
-  let filteredPosts = posts;
-  if (query) {
-      filteredPosts = filteredItems; // Filter posts based on the search query
-  }
+    const [companies, setCompanies] = useState([]);
 
-  if (selected) {
-      filteredPosts = filteredPosts.filter(({ jobLocation, maxPrice, experienceLevel, salaryType, employmentType, postingDate }) => {
-          // Convert postingDate to Date object
-          const postDate = new Date(postingDate);
-          const selectedDate = new Date(selected);
-          return jobLocation.toLowerCase() === selected.toLowerCase() || // Filter posts based on the selected category
-              parseInt(maxPrice) <= parseInt(selected) ||
-              postDate >= selectedDate || // Compare postingDate as Date object
-              salaryType.toLowerCase() === selected.toLowerCase() ||
-              employmentType.toLowerCase() === selected.toLowerCase();
+    useEffect(() => {
+      axios.get('/companies')
+        .then(response => {
+          setCompanies(response.data);
+        })
+        .catch(error => console.error('Error fetching companies:', error));
+    }, []);
+
+    // In the parent component of FiltersSide
+    const clearFilters = () => {
+      setSelectedLocation(null);
+      setSelectedSalary(null);
+      setSelectedDate(null);
+      setSelectedSalaryType('');
+      setSelectedWorkExperience('');
+      setSelectedEmploymentType('');
+    
+      // Reset checked state for radio buttons
+      const radioButtons = document.querySelectorAll('input[type="radio"]');
+      radioButtons.forEach((radioButton) => {
+        radioButton.checked = false;
       });
-  }
-
-  // Slice the Data based on the current page
-  const {startIndex, endIndex} = calculatePageRange();
-  filteredPosts = filteredPosts.slice(startIndex, endIndex);
-
-  return filteredPosts.map((data, i) => <Cards key={i} data={data} />); // Map filtered posts to Cards components
-};
-
-
-    // Call filteredData function to get the filtered posts
-    const result = filteredData(posts, selectedCategory, query);
+    };
+ 
 
     return (
-        <div>
-          {/* Banner component with search input */}
-            <Banner query={query} handleInputChange={handleInputChange} /> 
-            <div className='bg-[#fafafa] md:grid grid-cols-4 gap-8 lg:px-24 px-4 py-12'>
-              {/* FiltersSide component with radio buttons and buttons */}
+        <div className=''>
+            <Banner query={query} handleInputChange={handleInputChange} handleLocationInputChange={handleLocationInputChange} />
+            <div className='md:grid grid-cols-4 gap-8 lg:px-2 px-4 py-12 rounded bg-gray-100'>
                 <div className='bg-white p-4 rounded'>
-                    <FiltersSide handleChange={handleChange} handleClick={handleClick} /> 
-                    
+                    <FiltersSide handleFilterChange={handleFilterChange} clearFilters={clearFilters} selectedWorkExperience={selectedWorkExperience} selectedEmploymentType={selectedEmploymentType}/>
                 </div>
-                {/* Display posts or loading message */}
                 <div className='col-span-2 bg-white p-4 rounded-sm'>
-                    {isLoading ? (<p className='font-medium'>Loading...</p>) : result.length > 0 ? (<Posts result={result} />) : (<><h3 className='text-lg font-bold mb-2 '>
-                      {result.length} Jobs</h3><p>No Data Found</p>
-                    </>
-                  )} 
-
-                {/** Pagination */}
-                {
-                  result.length > 0 ? (
-                    <div className='flex justify-center mt-4 space-x-8'>
-                    <button onClick={previousPage} disabled={currentPage===1} className='hover:underline cursor-pointer'>Previous</button>
-                    <span className='mx-2'>Page {currentPage} of {Math.ceil(filteredItems.length / itemsPerPage)}</span>
-                    <button onClick={nextPage} disabled={currentPage === Math.ceil(filteredItems.length / itemsPerPage)} className='hover:underline cursor-pointer'>Next</button>
-                  </div>
-                  ) : ""
-                }
+                    {isLoading ? (<p className='font-medium'>Loading...</p>) : result.length > 0 ? (<Posts result={result} companies={companies} />) : (<><h3 className='text-lg font-bold mb-2'>
+                        {result.length} Jobs</h3><p>No Data Found</p>
+                        </>
+                    )}
+                    {result.length > 0 && (
+                        <div className='flex justify-center mt-4 space-x-8'>
+                            <button onClick={previousPage} disabled={currentPage === 1} className='hover:underline cursor-pointer'>Previous</button>
+                            <span className='mx-2'>Page {currentPage} of {Math.ceil(result.length / itemsPerPage)}</span>
+                            <button onClick={nextPage} disabled={currentPage === Math.ceil(result.length / itemsPerPage)} className='hover:underline cursor-pointer'>Next</button>
+                        </div>
+                    )}
                 </div>
-
-                {/* Placeholder for the right side content */}
-                <div className='bg-white p-4 rounded'>right</div> 
-                
+                <div className='bg-white p-4 rounded'>right</div>
             </div>
         </div>
     );

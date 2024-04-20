@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    protected $fillable = ['fullname', 'cin', 'cne', 'phoneNumber', 'schoolName', 'email', 'password'];
+    protected $fillable = ['fullname', 'cin', 'cne', 'phoneNumber', 'schoolName', 'email', 'password', 'cv_path',
+    'motivation_letter_path',];
 
 
     /**

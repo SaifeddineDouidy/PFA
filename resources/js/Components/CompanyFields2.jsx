@@ -8,7 +8,7 @@ import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 
 const CompanyFields2 = ({data, setData, errors }) => {
-  const { firstname, lastname, phoneNumber, country, companyName, companySize, jobTitle, desiredRecruitments } = data;
+  const { firstname, lastname, phoneNumber, country, companyName, companySize, jobTitle, aboutDesc } = data;
   
 
   return (
@@ -42,7 +42,7 @@ const CompanyFields2 = ({data, setData, errors }) => {
       </div>
 
       <div className="py-2">
-        <InputLabel htmlFor="phoneNumber" value="Num Téléphone" />
+        <InputLabel htmlFor="phoneNumber" value="Phone Number" />
         <PhoneInput
           country={'ma'}
           value={phoneNumber || ''}
@@ -123,29 +123,29 @@ const CompanyFields2 = ({data, setData, errors }) => {
           className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
           required
         >
-          <option value="">Intitulé de poste...</option>
-          <option value="Recruiter">Recruteur</option>
-          <option value="Manager">Responsable</option>
-          <option value="Director">Directeur</option>
-          <option value="Vice President">Vice-président</option>
-          <option value="C Suite">Cadre dirigeant</option>
+          <option value="">Job title...</option>
+          <option value="Recruiter">Recruiter</option>
+          <option value="Manager">Manager</option>
+          <option value="Director">Director</option>
+          <option value="Vice President">Vice President</option>
+          <option value="Senior executive">Senior executive</option>
           <option value="NULL">Autre</option>
         </select>
         <InputError message={errors.jobTitle} />
       </div>
 
       <div className="py-2">
-        <InputLabel htmlFor="desiredRecruitments" value="Desired Recruitments" />
-        <TextInput
-          id="desiredRecruitments"
-          name="desiredRecruitments"
-          type="number"
-          value={desiredRecruitments || ''}
-          onChange={(e) => setData({ ...data, desiredRecruitments: e.target.value })}
-          className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
-          required
+        <InputLabel htmlFor="aboutDesc" value="About the Company" />
+        <textarea
+            id="aboutDesc"
+            name="aboutDesc"
+            value={aboutDesc || ''}
+            onChange={(e) => setData({ ...data, aboutDesc: e.target.value })}
+            className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
+            required
         />
-        <InputError message={errors.desiredRecruitments} />
+
+        <InputError message={errors.aboutDesc} />
       </div>
     </>
   );

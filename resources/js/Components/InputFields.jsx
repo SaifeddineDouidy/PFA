@@ -1,20 +1,22 @@
 import React from 'react';
 
-const InputFields = ({ handleChange, value, title, name }) => {
- // Convert value to a string if it's not already a string
- const displayValue = value && typeof value !== 'string' ? String(value) : value;
-
- return (
-    <label className='sidebar-label-container'>
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        onChange={handleChange}
-      />
-      <span className='checkmark'></span>{title} {/* Use the title prop here */}
-    </label>
- );
+const InputFields = ({ handleFilterChange, value, title, name, checked }) => {
+  const handleRadioChange = (event) => {
+     handleFilterChange(name, event.target.value);
+  };
+ 
+  return (
+     <label className='sidebar-label-container'>
+       <input
+         type="radio"
+         name={name}
+         value={value}
+         checked={checked}
+         onChange={handleRadioChange}
+       />
+       <span className='checkmark ml-2'></span>{title}
+     </label>
+  );
 };
 
 export default InputFields;

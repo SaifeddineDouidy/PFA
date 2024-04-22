@@ -9,6 +9,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobController;
 use App\Models\Job;
 use App\Models\Company;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 // Route to get the CSRF token
@@ -48,6 +49,7 @@ Route::get('/signup', function () {
     return Inertia::render('SignUp');
 })->name('signup');
 
+
 // Student dashboard route
 Route::get('student/dashboard', function () {
     return Inertia::render('StudentDashboard');
@@ -63,7 +65,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// JOb Details Route
+// Job Details Route
 Route::get('/detailjobs/{id}', function ($id) {
     // Fetch the job data from your database based on the provided $id
     $job = Job::findOrFail($id);
@@ -79,11 +81,16 @@ Route::get('/detailjobs/{id}', function ($id) {
     ]);
 })->name('detail-jobs');
 
-// Routes protected by auth middleware
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Student profile routes
+    Route::get('/student/profile', [StudentProfileController::class, 'edit'])->name('student.profile.edit');
+    Route::patch('/student/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
+    Route::delete('/student/profile', [StudentProfileController::class, 'destroy'])->name('student.profile.destroy');
+
+    // Company profile routes
+    Route::get('/company/profile', [ProfileController::class, 'edit'])->name('company.profile.edit');
+    Route::patch('/company/profile', [ProfileController::class, 'update'])->name('company.profile.update');
+    Route::delete('/company/profile', [ProfileController::class, 'destroy'])->name('company.profile.destroy');
 });
 
 // Route for registering a student

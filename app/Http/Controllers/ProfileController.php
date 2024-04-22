@@ -37,7 +37,14 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit');
+        // Determine the user's role
+        $role = $request->user()->role; // Assuming 'role' is a property on your User model
+
+        // Dynamically set the route based on the user's role
+        $route = $role === 'student' ? 'student.profile.edit' : 'company.profile.edit';
+
+        // Redirect to the appropriate profile edit page
+        return Redirect::route($route);
     }
 
     /**

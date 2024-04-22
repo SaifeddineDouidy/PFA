@@ -2,6 +2,7 @@ import React from 'react';
 
 const FileInput = ({ id, value, onChange, ...props }) => {
     const handleFileChange = (e) => {
+        console.log(e.target.files[0]);
         onChange(e.target.files[0]);
     };
 
@@ -10,7 +11,6 @@ const FileInput = ({ id, value, onChange, ...props }) => {
             id={id}
             type="file"
             className="mt-1 block w-full"
-            value={value}
             onChange={handleFileChange}
             {...props}
         />

@@ -63,17 +63,17 @@ export default function Register() {
 
             const response = await axios.post(endpoint, payload, {
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "multipart/form-data",
                     "X-CSRF-TOKEN": csrfToken,
-                },
-            });
+            },
+        });
 
-            console.log('Registration successful:', response.data);
+            console.log('Registration successful:', payload);
             setSuccessMessage('Registration successful');
 
             // Redirect to the login page after successful registration
-            Inertia.visit('/login');
-
+            //Inertia.visit('/login');
+            
         } catch (error) {
             console.error('Registration failed:', error.response ? error.response.data : error.message);
             console.log('Registration :', error.data);

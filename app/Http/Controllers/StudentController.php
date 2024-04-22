@@ -23,8 +23,8 @@ class StudentController extends Controller
             'cne' => 'required',
             'phoneNumber' => 'required',
             'schoolName' => 'required',
-            'cv' => 'nullable|file|max:3072|mimetypes:application/pdf',
-            'motivation_letter' => 'nullable|file|max:3072|mimetypes:application/pdf',
+            'cv_path' => 'nullable|file|max:3072|mimetypes:application/pdf',
+            'motivation_letter_oath' => 'nullable|file|max:3072|mimetypes:application/pdf',
             // Add other student-specific fields here
         ]);
 
@@ -50,15 +50,16 @@ class StudentController extends Controller
 
             // Handle CV file upload
             if ($request->hasFile('cv')) {
-                $cvPath = $request->file('cv')->store('students/cvs', 'private');
+                $cvPath = $request->file('cv')->store('students/cvs', 'public');
                 $student->cv_path = $cvPath;
             }
 
             // Handle Motivation Letter file upload
-            if ($request->hasFile('motivation_letter')) {
-                $motivationLetterPath = $request->file('motivation_letter')->store('students/motivation-letters', 'private');
+            if ($request->hasFile('motivationLetter')) {
+                $motivationLetterPath = $request->file('motivationLetter')->store('students/motivation-letters', 'public');
                 $student->motivation_letter_path = $motivationLetterPath;
-            }            
+            }
+
             $student->save();
         });
 
@@ -66,30 +67,6 @@ class StudentController extends Controller
         return Inertia::location(route('login'));
     }
 
-    public function updateFiles(Request $request)
-{
-    $request->validate([
-        'cv' => 'nullable|file|max:3072', // 3MB file size limit
-        'motivationLetter' => 'nullable|file|max:3072', // 3MB file size limit
-    ]);
-
-    $user = $request->user();
-
-    if ($request->hasFile('cv')) {
-        $cvPath = $request->file('cv')->store('students/cvs', 'private');
-        $user->student->cv_path = $cvPath;
-    }
-
-    if ($request->hasFile('motivationLetter')) {
-        $motivationLetterPath = $request->file('motivationLetter')->store('students/motivation-letters', 'private');
-        $user->student->motivation_letter_path = $motivationLetterPath;
-    }
-
-    $user->student->save();
-
-    return response()->json(['message' => 'Files updated successfully.']);
-}
-    
 
     // The rest of the methods remain unchanged
 }

@@ -4,11 +4,15 @@ import 'react-phone-input-2/lib/style.css';
 import schoolData from '../../assets/data/schools.json';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 
 const StudentFields = ({ data, setData, errors  }) => {
-  const { fullname, cin, cne, phoneNumber, schoolName } = data;
+  const { fullname, cin, cne, phoneNumber, schoolName, cv, motivationLetter } = data;
+  const handleFileChange = (e, fieldName) => {
+    const newData = { ...data };
+    newData[fieldName] = e.target.files[0];
+    setData(newData);
+  };
 
   return (
     <>
@@ -95,18 +99,22 @@ const StudentFields = ({ data, setData, errors  }) => {
           type="file"
           id="cv"
           name="cv"
+          onChange={(e) => handleFileChange(e, 'cv')}
           className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
         />
+        <InputError message={errors.cv} />
       </div>
 
       <div className="py-2">
-        <InputLabel htmlFor="additionalDocs" value="Upload Additional Documents (Motivation Letter)" />
+        <InputLabel htmlFor="motivationLetter" value="Upload Additional Documents (Motivation Letter)" />
         <input
           type="file"
-          id="additionalDocs"
-          name="additionalDocs"
+          id="motivationLetter"
+          name="motivationLetter"
+          onChange={(e) => handleFileChange(e, 'motivationLetter')}
           className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
         />
+        <InputError message={errors.motivationLetter} />
       </div>
     </>
   );

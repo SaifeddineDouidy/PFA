@@ -9,7 +9,27 @@ import TextInput from '@/Components/TextInput';
 
 const CompanyFields2 = ({data, setData, errors }) => {
   const { firstname, lastname, phoneNumber, country, companyName, companySize, jobTitle, aboutDesc } = data;
+
+    // Inside CompanyFields2 component
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const formData = new FormData();
   
+      // Append all necessary fields to formData
+      formData.append('firstname', data.firstname);
+      formData.append('lastname', data.lastname);
+      formData.append('phoneNumber', data.phoneNumber);
+      formData.append('country', data.country);
+      formData.append('companyName', data.companyName);
+      formData.append('companySize', data.companySize);
+      formData.append('jobTitle', data.jobTitle);
+      formData.append('aboutDesc', data.aboutDesc);
+      formData.append('_token', csrfToken);
+      // Append other fields...
+  
+      // Call the passed submit callback with the formData
+      props.onSubmit(formData);
+    };
 
   return (
     <>

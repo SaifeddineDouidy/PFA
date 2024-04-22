@@ -4,26 +4,60 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import FileInput from '@/Components/FileInput';
 import { useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
+import { useState, useEffect } from 'react';
 
 export default function UpdateFiles({ className = '' }) {
-    const { user } = usePage().props;
+    const { student } = usePage().props;
 
-    const { data, setData, post, patch, errors, processing, recentlySuccessful } = useForm({
-        cv: null,
-        motivationLetter: null,
+    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
+        cv: student.cv_path || null,
+        motivationLetter: student.motivation_letter_path || null,
     });
+    
+    const handleFileChange = (e, field) => {
+        setData({ ...data, [field]: e.target.files[0] });
+      };
+
+    const [csrfToken, setCsrfToken] = useState('');
+
+    useEffect(() => {
+        const fetchCsrfToken = async () => {
+            try {
+                const response = await axios.get('/csrf-token');
+                setCsrfToken(response.data.csrfToken);
+            } catch (error) {
+                console.error('Failed to fetch CSRF token:', error);
+            }
+        };
+
+        fetchCsrfToken();
+    }, []);
 
     const submit = async (e) => {
         e.preventDefault();
-
         try {
-            await patch(route('profile.update-files'), {
-                cv: data.cv,
-                motivationLetter: data.motivationLetter,
+            const formData = new FormData();
+            formData.append('_token', csrfToken);
+
+            if (data.cv) {
+                console.log('It exists')
+                formData.append('cv', data.cv);
+            }
+
+            if (data.motivationLetter) {
+                formData.append('motivationLetter', data.motivationLetter);
+            }
+
+
+            await patch(route('profile.update'), formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
+
+            console.log('Files updated successfully.');
         } catch (error) {
-            // Handle any errors that occur during the file upload
-            console.error('Error uploading files:', error);
+            console.error('Error updating files:', error);
         }
     };
 
@@ -37,17 +71,19 @@ export default function UpdateFiles({ className = '' }) {
                 </p>
             </header>
 
-            <form onSubmit={submit} className="mt-6 space-y-6">
-                <div>
-                    <InputLabel htmlFor="cv" value="Curriculum Vitae (CV)" />
+            <form onSubmit={submit} className="mt-6 space-y-6" encType="multipart/form-data">
+                <input type="hidden" name="_token" value={csrfToken} />
 
-                    <FileInput
+                <div className="py-2">
+                    <InputLabel htmlFor="cv" value="Upload CV" />
+                        <input
+                        type="file"
                         id="cv"
-                        value={data.cv}
-                        onChange={(file) => setData('cv', file)}
-                    />
-
-                    <InputError className="mt-2" message={errors.cv} />
+                        name="cv"
+                        onChange={(e) => handleFileChange(e, 'cv')}
+                        className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
+                        />
+                        <InputError message={errors.cv} />
                 </div>
 
                 <div>
@@ -55,6 +91,7 @@ export default function UpdateFiles({ className = '' }) {
 
                     <FileInput
                         id="motivation-letter"
+                        name="motivationLetter"
                         value={data.motivationLetter}
                         onChange={(file) => setData('motivationLetter', file)}
                     />

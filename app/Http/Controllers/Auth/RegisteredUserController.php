@@ -28,7 +28,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request, StudentController $studentController, CompanyController $companyController): RedirectResponse
+    public function store(Request $request, EmployeeController $employeeController, CompanyController $companyController): RedirectResponse
     {
         $request->validate([
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
@@ -37,7 +37,7 @@ class RegisteredUserController extends Controller
         ]);
     
         // Determine the role based on the submitted data
-        $role = $request->input('accountType') === 'student' ? 'student' : 'company';
+        $role = $request->input('accountType') === 'employee' ? 'employee' : 'company';
     
         // Create a new user record with the determined role
         $user = User::create([
@@ -54,8 +54,8 @@ class RegisteredUserController extends Controller
         Auth::login($user);
     
         // Call the respective controller method based on the role
-        if ($role === 'student') {
-            $studentController->register($request); // No need to pass $user
+        if ($role === 'employee') {
+            $employeeController->register($request); // No need to pass $user
         } else {
             $companyController->register($request); // No need to pass $user
         }

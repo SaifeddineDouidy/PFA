@@ -1,5 +1,6 @@
-import UpdateStudentProfileInformation from './UpdateStudentProfileInformation';
+import UpdateEmployeeProfileInformation from './UpdateEmployeeProfileInformation';
 import UpdateCompanyProfileInformation from './UpdateCompanyProfileInformation';
+import UpdateFiles from './UpdateFiles';
 import { usePage } from '@inertiajs/react';
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
@@ -7,12 +8,14 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
 
     return (
         <div>
-            {user.role === 'student' ? (
-                <UpdateStudentProfileInformation
+            {user.role === 'employee' ? (
+                
+                <UpdateEmployeeProfileInformation
                     mustVerifyEmail={mustVerifyEmail}
                     status={status}
                     className={className}
                 />
+                
             ) : (
                 <UpdateCompanyProfileInformation
                     mustVerifyEmail={mustVerifyEmail}

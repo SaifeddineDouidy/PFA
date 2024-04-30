@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id'); // Add user_id foreign key
             $table->string('fullname');
-            $table->string('cin');
-            $table->string('cne');
+            $table->string('cin')->unique();
             $table->string('email')->default("default@gmail.com")->unique();
             $table->string('password');
             $table->string('phoneNumber');
-            $table->string('schoolName');
+            $table->string('educationLevel');
             $table->string('cv_path')->nullable(); // Add CV file path column
             $table->string('motivation_letter_path')->nullable(); // Add Motivation Letter file path column
             $table->timestamps();
@@ -38,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('employees');
     }
 };

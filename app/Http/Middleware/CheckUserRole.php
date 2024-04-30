@@ -15,8 +15,8 @@ class CheckUserRole
         
             $user = Auth::user();
 
-            if ($user->role === 'student') {
-                return redirect()->route('student.dashboard');
+            if ($user->role === 'employee') {
+                return redirect()->route('employee.dashboard');
             } elseif ($user->role === 'company') {
                 return redirect()->route('company.dashboard');
             } elseif ($user->role === 'guest') {

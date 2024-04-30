@@ -10,19 +10,28 @@ const WorkExperience = ({ handleFilterChange, selectedWorkExperience }) => {
     { value: 'Any experience', title: 'Any experience' },
  ];
 
+ const handleWorkExperienceCheckboxChange = (type, isChecked) => {
+  if (isChecked) {
+    handleFilterChange('work-exp', type);
+  } else {
+    handleFilterChange('work-exp', type, false);
+  }
+};
+
  return (
     <div className=''>
       <h4 className='text-lg font-medium mb-2 '>Work Experience</h4>
       <div className=''>
-        {experienceLevels.map((level, index) => (
-          <div key={index}>
-            <InputFields
-              handleFilterChange={handleFilterChange}
-              value={level.value}
-              title={level.title}
-              name='work-exp'
-              checked={selectedWorkExperience && selectedWorkExperience === level.value}
-            />
+      {experienceLevels.map((type, index) => (
+          <div key={index}  style={{ marginBottom: '0.1rem' }}>
+          <InputFields
+            key={index}
+            handleFilterChange={handleWorkExperienceCheckboxChange}
+            value={type.value}
+            title={type.title}
+            name="employment-type"
+            checked={selectedWorkExperience.includes(type.value)}
+          />
           </div>
         ))}
       </div>

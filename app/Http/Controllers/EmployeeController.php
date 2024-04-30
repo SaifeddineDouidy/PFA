@@ -5,27 +5,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Student;
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 
 
-class StudentController extends Controller
+class EmployeeController extends Controller
 {
     public function register(Request $request)
     {
-        // Validate additional student-specific fields
+        // Validate additional employee-specific fields
         $request->validate([
             'fullname' => 'required|string|max:255',
             'cin' => 'required',
-            'cne' => 'required',
             'phoneNumber' => 'required',
-            'schoolName' => 'required',
+            'educationLevel' => 'required',
             'cv_path' => 'nullable|file|max:3072|mimetypes:application/pdf',
             'motivation_letter_oath' => 'nullable|file|max:3072|mimetypes:application/pdf',
-            // Add other student-specific fields here
+            // Add other employee-specific fields here
         ]);
 
         // Begin a database transaction
@@ -34,33 +33,32 @@ class StudentController extends Controller
             $user = new User();
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
-            $user->role = "student";
+            $user->role = "employee";
             $user->save();
 
-            // Create the student record and associate it with the user
-            $student = new Student();
-            $student->user_id = $user->id;
-            $student->fullname = $request->fullname;
-            $student->cin = $request->cin;
-            $student->cne = $request->cne;
-            $student->email = $request->email;
-            $student->password = Hash::make($request->password);
-            $student->phoneNumber = $request->phoneNumber;
-            $student->schoolName = $request->schoolName;
+            // Create the employee record and associate it with the user
+            $employee = new Employee();
+            $employee->user_id = $user->id;
+            $employee->fullname = $request->fullname;
+            $employee->cin = $request->cin;
+            $employee->email = $request->email;
+            $employee->password = Hash::make($request->password);
+            $employee->phoneNumber = $request->phoneNumber;
+            $employee->educationLevel = $request->educationLevel;
 
             // Handle CV file upload
             if ($request->hasFile('cv')) {
-                $cvPath = $request->file('cv')->store('students/cvs', 'public');
-                $student->cv_path = $cvPath;
+                $cvPath = $request->file('cv')->store('employees/cvs', 'public');
+                $employee->cv_path = $cvPath;
             }
 
             // Handle Motivation Letter file upload
             if ($request->hasFile('motivationLetter')) {
-                $motivationLetterPath = $request->file('motivationLetter')->store('students/motivation-letters', 'public');
-                $student->motivation_letter_path = $motivationLetterPath;
+                $motivationLetterPath = $request->file('motivationLetter')->store('employees/motivation-letters', 'public');
+                $employee->motivation_letter_path = $motivationLetterPath;
             }
 
-            $student->save();
+            $employee->save();
         });
 
         // Redirect to the login page after successful registration

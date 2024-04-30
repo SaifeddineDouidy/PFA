@@ -41,7 +41,7 @@ class ProfileController extends Controller
         $role = $request->user()->role; // Assuming 'role' is a property on your User model
 
         // Dynamically set the route based on the user's role
-        $route = $role === 'student' ? 'student.profile.edit' : 'company.profile.edit';
+        $route = $role === 'employee' ? 'employee.profile.edit' : 'company.profile.edit';
 
         // Redirect to the appropriate profile edit page
         return Redirect::route($route);

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id(); // Jobs id
             $table->unsignedBigInteger('company_id'); // Add company_id foreign key
             $table->string('jobTitle');
-            $table->integer('minPrice');
-            $table->integer('maxPrice');
+            $table->integer('minPrice')->nullable();
+            $table->integer('maxPrice')->nullable();
             $table->string('salaryType');
             $table->string('jobLocation');
             $table->date('postingDate');

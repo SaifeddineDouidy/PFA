@@ -11,7 +11,7 @@ export default function DetailedJob({ auth, job, company }) {
 
     return (
         <AuthenticatedLayout user={user}>
-            <Head title="Dashboard" />
+            <Head title={job?.company?.companyName} />
             <div className="bg-grey-100">
                 <div className="bg-grey-100 overflow-hidden shadow-sm sm:rounded-lg">
                     <div className='w-full h-full bg-white px-5 py-10 md:px-10 shadow-md'>
@@ -121,7 +121,7 @@ export default function DetailedJob({ auth, job, company }) {
                                         <span className='text-md'>{job?.company?.jobTitle}'s Email : {job?.company?.email}</span>
                                     </div>
                                     <p className='text-xl font-semibold'>About Company</p>
-                                    <div class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 pb-[50%]flex items-center justify-center">
+                                    <div className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 pb-[50%]flex items-center justify-center">
                                        {job?.company?.aboutDesc}
                                     </div>
                                 </>

@@ -1,21 +1,22 @@
 import React from 'react';
 
 const InputFields = ({ handleFilterChange, value, title, name, checked }) => {
-  const handleRadioChange = (event) => {
-     handleFilterChange(name, event.target.value);
+  const handleCheckboxChange = (event) => {
+    handleFilterChange(event.target.value, event.target.checked);
   };
- 
+
   return (
-     <label className='sidebar-label-container'>
-       <input
-         type="radio"
-         name={name}
-         value={value}
-         checked={checked}
-         onChange={handleRadioChange}
-       />
-       <span className='checkmark ml-2'></span>{title}
-     </label>
+    <label className="sidebar-label-container">
+      <input
+        type="checkbox"
+        name={name}
+        value={value}
+        checked={checked}
+        onChange={handleCheckboxChange}
+      />
+      <span className="checkmark ml-2"></span>
+      {title}
+    </label>
   );
 };
 

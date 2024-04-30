@@ -7,16 +7,16 @@ import { Transition } from '@headlessui/react';
 import { useState, useEffect } from 'react';
 
 export default function UpdateFiles({ className = '' }) {
-    const { student } = usePage().props;
+    const { employee } = usePage().props;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        cv: student.cv_path || null,
-        motivationLetter: student.motivation_letter_path || null,
+        cv: employee.cv_path || null,
+        motivationLetter: employee.motivation_letter_path || null,
     });
     
     const handleFileChange = (e, field) => {
         setData({ ...data, [field]: e.target.files[0] });
-      };
+    };
 
     const [csrfToken, setCsrfToken] = useState('');
 
@@ -38,23 +38,21 @@ export default function UpdateFiles({ className = '' }) {
         try {
             const formData = new FormData();
             formData.append('_token', csrfToken);
-
+    
             if (data.cv) {
-                console.log('It exists')
                 formData.append('cv', data.cv);
             }
-
+    
             if (data.motivationLetter) {
                 formData.append('motivationLetter', data.motivationLetter);
             }
-
-
-            await patch(route('profile.update'), formData, {
+    
+            await patch(route('employee.profile.update'), formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
+    
             console.log('Files updated successfully.');
         } catch (error) {
             console.error('Error updating files:', error);
@@ -77,11 +75,11 @@ export default function UpdateFiles({ className = '' }) {
                 <div className="py-2">
                     <InputLabel htmlFor="cv" value="Upload CV" />
                         <input
-                        type="file"
-                        id="cv"
-                        name="cv"
-                        onChange={(e) => handleFileChange(e, 'cv')}
-                        className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
+                            type="file"
+                            id="cv"
+                            name="cv"
+                            onChange={(e) => handleFileChange(e, 'cv')}
+                            className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
                         />
                         <InputError message={errors.cv} />
                 </div>
@@ -89,12 +87,13 @@ export default function UpdateFiles({ className = '' }) {
                 <div>
                     <InputLabel htmlFor="motivation-letter" value="Motivation Letter" />
 
-                    <FileInput
-                        id="motivation-letter"
-                        name="motivationLetter"
-                        value={data.motivationLetter}
-                        onChange={(file) => setData('motivationLetter', file)}
-                    />
+                        <input
+                            type="file"
+                            id="motivationLetter"
+                            name="motivationLetter"
+                            onChange={(e) => handleFileChange(e, 'motivationLetter')}
+                            className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
+                            />
 
                     <InputError className="mt-2" message={errors.motivationLetter} />
                 </div>

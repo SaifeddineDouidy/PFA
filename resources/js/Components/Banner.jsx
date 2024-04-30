@@ -20,13 +20,12 @@ const Banner = ({ query, locationQuery, handleInputChange, handleLocationInputCh
                         />
                         <FiSearch className='absolute mt-3.5 ml-3 text-gray-400' />
                     </div>
-                    <div className='mt-1 h-10 border-l border-gray-300 md:mx-4'></div>
                     <div className='flex md:rounded-md rounded shadow-sm outline-none focus-within:outline-2 focus-within:outline-blue-500 md:w-1/3 w-full'>
                         <input
                             type="text"
                             name='location'
                             id='location'
-                            placeholder='Localisation'
+                            placeholder='Location'
                             className='block flex-1 border-0 bg-transparent py-3 pl-10 text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-base sm:leading-6 rounded-md'
                             onChange={handleLocationInputChange}
                             value={locationQuery}

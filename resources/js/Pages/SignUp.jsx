@@ -6,7 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm, usePage } from '@inertiajs/react'; 
 import {Inertia} from '@inertiajs/inertia';
-import StudentFields2 from '../Components/StudentFields2';
+import EmployeeFields from '../Components/EmployeeFields';
 import CompanyFields2 from '../Components/CompanyFields2';
 import axios from 'axios';
 
@@ -38,7 +38,7 @@ export default function Register() {
 
 
 
-    const [accountType, setAccountType] = useState('student');
+    const [accountType, setAccountType] = useState('employee');
 
     const handleAccountTypeChange = (type) => {
         setAccountType(type);
@@ -53,8 +53,8 @@ export default function Register() {
             };
 
             let endpoint;
-            if (accountType === 'student') {
-                endpoint = '/register/student';
+            if (accountType === 'employee') {
+                endpoint = '/register/employee';
             } else if (accountType === 'company') {
                 endpoint = '/register/company';
             } else {
@@ -72,7 +72,7 @@ export default function Register() {
             setSuccessMessage('Registration successful');
 
             // Redirect to the login page after successful registration
-            //Inertia.visit('/login');
+            Inertia.visit('/login');
             
         } catch (error) {
             console.error('Registration failed:', error.response ? error.response.data : error.message);
@@ -95,13 +95,13 @@ export default function Register() {
                         <div className="flex items-center">
                             <input
                                 type="radio"
-                                id="student"
+                                id="employee"
                                 name="accountType"
-                                value="student"
-                                checked={accountType === 'student'}
-                                onChange={() => handleAccountTypeChange('student')}
+                                value="employee"
+                                checked={accountType === 'employee'}
+                                onChange={() => handleAccountTypeChange('employee')}
                             />
-                            <label htmlFor="student" className="ml-2">Student</label>
+                            <label htmlFor="employee" className="ml-2">Employee</label>
                         </div>
                         <div className="flex items-center">
                             <input
@@ -117,7 +117,7 @@ export default function Register() {
                     </div>
 
                     {/* Render fields based on account type */}
-                    {accountType === 'student' && <StudentFields2 {...{ data, setData, errors }} />}
+                    {accountType === 'employee' && <EmployeeFields {...{ data, setData, errors }} />}
                     {accountType === 'company' && <CompanyFields2 {...{ data, setData, errors }} />}
 
                     {/* Common Fields */}

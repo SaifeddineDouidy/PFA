@@ -1,4 +1,4 @@
-import StudentHome from '../Components/StudentHome'
+import EmployeeHome from '../Components/EmployeeHome'
 import CompanyHome from '../Components/CompanyHome'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -9,9 +9,9 @@ function AuthPageAccueil({auth}) {
   return (
           <AuthenticatedLayout
             user={user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Page d'accueil (Student)</h2>}>
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Page d'accueil (Employee)</h2>}>
             <Head title={`Page d'Accueil (${role})`} />
-            {role === 'student' && <StudentHome />}
+            {role === 'employee' && <EmployeeHome />}
             {role === 'company' && <CompanyHome />}
 
         </AuthenticatedLayout>

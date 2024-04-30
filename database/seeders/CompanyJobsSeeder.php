@@ -66,14 +66,15 @@ class CompanyJobsSeeder extends Seeder
             [
                 'company_id' => 1,
                 'jobTitle' => 'Backend Developer',
-                'minPrice' => 8000,
-                'maxPrice' => 10000,
-                'salaryType' => 'Monthly',
+                'minPrice' => null,
+                'maxPrice' => null,
+                'salaryType' => '',
                 'jobLocation' => 'Rabat',
                 'postingDate' => '2024-01-12',
                 'experienceLevel' => 'Junior-level',
                 'employmentType' => 'Intership',
                 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                'requirments' => 'Django, Kubernetes',
             ],
             // Add more sample data as needed
         ];
@@ -83,7 +84,7 @@ class CompanyJobsSeeder extends Seeder
             'jobTitle' => 'required|string|max:255',
             'minPrice' => 'numeric|nullable',
             'maxPrice' => 'numeric|nullable|gte:minPrice',
-            'salaryType' => 'required',
+            'salaryType' => 'required_unless:employmentType,Intership|string',
             'jobLocation' => 'required',
             'postingDate' => 'required|date',
             'experienceLevel' => 'required',

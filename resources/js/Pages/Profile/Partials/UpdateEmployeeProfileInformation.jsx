@@ -4,8 +4,9 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
+import UpdateFiles from './UpdateFiles';
 
-export default function UpdateStudentProfileInformation({ mustVerifyEmail, status, className = '' }) {
+export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, status, className = '' }) {
     const { user } = usePage().props.auth;
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
@@ -32,13 +33,13 @@ export default function UpdateStudentProfileInformation({ mustVerifyEmail, statu
             formData.motivation_letter_path = data.motivation_letter_path;
         }
 
-        patch(route('student.profile.update'), formData);
+        patch(route('employee.profile.update'), formData);
     };
 
     return (
         <section className={className}>
             <header>
-                <h2 className="text-lg font-medium text-gray-900">Student Profile Information</h2>
+                <h2 className="text-lg font-medium text-gray-900">Employee Profile Information</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
                     Update your account's profile information, email address, CV, and motivation letter.
@@ -46,7 +47,7 @@ export default function UpdateStudentProfileInformation({ mustVerifyEmail, statu
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
-                {/* Student-specific fields */}
+                {/* Employee-specific fields */}
                 <div>
                     <InputLabel htmlFor="fullname" value="Full Name" />
 
@@ -62,33 +63,6 @@ export default function UpdateStudentProfileInformation({ mustVerifyEmail, statu
                     <InputError className="mt-2" message={errors.fullname} />
                 </div>
 
-                <div>
-                    <InputLabel htmlFor="cv_path" value="CV" />
-
-                    <TextInput
-                        id="cv_path"
-                        className="mt-1 block w-full"
-                        value={data.cv_path}
-                        onChange={(e) => setData('cv_path', e.target.value)}
-                        autoComplete="cv_path"
-                    />
-
-                    <InputError className="mt-2" message={errors.cv_path} />
-                </div>
-
-                <div>
-                    <InputLabel htmlFor="motivation_letter_path" value="Motivation Letter" />
-
-                    <TextInput
-                        id="motivation_letter_path"
-                        className="mt-1 block w-full"
-                        value={data.motivation_letter_path}
-                        onChange={(e) => setData('motivation_letter_path', e.target.value)}
-                        autoComplete="motivation_letter_path"
-                    />
-
-                    <InputError className="mt-2" message={errors.motivation_letter_path} />
-                </div>
 
                 {/* Common fields */}
                 <div>
@@ -107,12 +81,27 @@ export default function UpdateStudentProfileInformation({ mustVerifyEmail, statu
                     <InputError className="mt-2" message={errors.email} />
                 </div>
 
-                {/* Verification email section */}
                 {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
-                        {/* Verification email content */}
+                        <p className="text-sm mt-2 text-gray-800">
+                            Your email address is unverified.
+                            <Link
+                                href={route('verification.send')}
+                                method="post"
+                                as="button"
+                                className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                                Click here to re-send the verification email.
+                            </Link>
+                        </p>
+                        {status === 'verification-link-sent' && (
+                            <div className="mt-2 font-medium text-sm text-green-600">
+                                A new verification link has been sent to your email address.
+                            </div>
+                        )}
                     </div>
                 )}
+
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing}>Save</PrimaryButton>
@@ -127,6 +116,9 @@ export default function UpdateStudentProfileInformation({ mustVerifyEmail, statu
                         <p className="text-sm text-[#00FF33]">Saved.</p>
                     </Transition>
                 </div>
+
+                <UpdateFiles className="max-w-xl mt-5" />
+                
             </form>
         </section>
     );

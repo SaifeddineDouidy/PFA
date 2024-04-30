@@ -4,12 +4,15 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\StudentController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeProfileController;
+use App\Http\Controllers\SavedPostsController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobController;
 use App\Models\Job;
 use App\Models\Company;
-use App\Models\Student;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 // Route to get the CSRF token
@@ -39,10 +42,10 @@ Route::get('/', function () {
     return Inertia::render('PageAccueil');
 });
 
-// Student Home page route
-Route::get('/student/home', function () {
+// Employee Home page route
+Route::get('/employee/home', function () {
     return Inertia::render('AuthPageAccueil');
-})->name('student.home');
+})->name('employee.home');
 
 // Register page route
 Route::get('/signup', function () {
@@ -50,10 +53,10 @@ Route::get('/signup', function () {
 })->name('signup');
 
 
-// Student dashboard route
-Route::get('student/dashboard', function () {
-    return Inertia::render('StudentDashboard');
-})->name('student.dashboard');
+// Employee dashboard route
+Route::get('employee/dashboard', function () {
+    return Inertia::render('EmployeeDashboard');
+})->name('employee.dashboard');
 
 // Company dashboard route
 Route::get('/company/dashboard', function () {
@@ -64,6 +67,35 @@ Route::get('/company/dashboard', function () {
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+// Saved Posts routes
+Route::get('/saved-posts', [SavedPostsController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('saved-posts');
+
+Route::post('/saved-posts', [SavedPostsController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('saved-posts.store');
+
+Route::delete('/saved-posts', [SavedPostsController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('saved-posts.destroy');
+
+    Route::get('/applications/{postId}', function ($postId) {
+        $job = Job::findOrFail($postId);
+        $company = $job->company;
+    
+        return Inertia::render('ApplicationsPostsPage', [
+            'job' => $job,
+            'company' => $company,
+            'postId' => $postId, // Explicitly pass postId
+            'auth' => [
+                'user' => auth()->user(),
+            ],
+        ]);
+    })->name('applications.show')->middleware(['auth', 'verified']);
+    
 
 // Job Details Route
 Route::get('/detailjobs/{id}', function ($id) {
@@ -82,10 +114,10 @@ Route::get('/detailjobs/{id}', function ($id) {
 })->name('detail-jobs');
 
 Route::middleware('auth')->group(function () {
-    // Student profile routes
-    Route::get('/student/profile', [StudentProfileController::class, 'edit'])->name('student.profile.edit');
-    Route::patch('/student/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
-    Route::delete('/student/profile', [StudentProfileController::class, 'destroy'])->name('student.profile.destroy');
+    // employee profile routes
+    Route::get('/employee/profile', [EmployeeProfileController::class, 'edit'])->name('employee.profile.edit');
+    Route::patch('/employee/profile', [EmployeeProfileController::class, 'update'])->name('employee.profile.update');
+    Route::delete('/employee/profile', [EmployeeProfileController::class, 'destroy'])->name('employee.profile.destroy');
 
     // Company profile routes
     Route::get('/company/profile', [ProfileController::class, 'edit'])->name('company.profile.edit');
@@ -93,8 +125,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/company/profile', [ProfileController::class, 'destroy'])->name('company.profile.destroy');
 });
 
-// Route for registering a student
-Route::post('/register/student', [StudentController::class, 'register'])->name('register.student');
+// Route for registering a employee
+Route::post('/register/employee', [EmployeeController::class, 'register'])->name('register.employee');
 
 // Route for registering a company
 Route::post('/register/company', [CompanyController::class, 'register'])->name('register.company');

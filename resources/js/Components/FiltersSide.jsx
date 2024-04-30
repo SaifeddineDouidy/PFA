@@ -7,7 +7,7 @@ import EmploymentType from './EmploymentType';
 
 
 
-const FiltersSide = ({ handleFilterChange, clearFilters, selectedWorkExperience, selectedEmploymentType }) => {
+const FiltersSide = ({ handleFilterChange, clearFilters, selectedLocations, selectedWorkExperience, selectedEmploymentType }) => {
  return (
     <div className='space-y-5'>
       <div className="border-b border-gray-300 pb-5">
@@ -15,7 +15,7 @@ const FiltersSide = ({ handleFilterChange, clearFilters, selectedWorkExperience,
         <button onClick={clearFilters} className="text-[#f04b22] hover:underline">Clear Filters</button>
       </div>
       <div className="border-b border-gray-300 pb-5">
-        <Locations handleFilterChange={handleFilterChange} filterType="location" />
+        <Locations handleFilterChange={handleFilterChange} selectedLocations={selectedLocations} filterType="location" />
       </div>
       <div className="border-b border-gray-300 pb-5">
         <Salary handleFilterChange={handleFilterChange} filterType="salary" />
@@ -27,7 +27,7 @@ const FiltersSide = ({ handleFilterChange, clearFilters, selectedWorkExperience,
         <WorkExperience handleFilterChange={handleFilterChange} selectedWorkExperience={selectedWorkExperience} />
       </div>
       <div>
-        <EmploymentType handleFilterChange={handleFilterChange} selectedEmploymentType={selectedEmploymentType} />
+        <EmploymentType handleFilterChange={handleFilterChange} filterType="employment-type"  selectedEmploymentType={selectedEmploymentType} />
       </div>
     </div>
  );

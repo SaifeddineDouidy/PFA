@@ -15,7 +15,7 @@ const Salary = ({ handleFilterChange }) => {
       <div>
         <label className="sidebar-label-container">
           <input 
-            type="radio" 
+            type="checkbox" 
             name='salary' 
             id='all-salaries' 
             value="" 

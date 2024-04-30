@@ -1,13 +1,13 @@
 import React from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import schoolData from '../../assets/data/schools.json';
+import educationLevel from '../../assets/data/educationLevel.json';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
 
-const StudentFields = ({ data, setData, errors  }) => {
-  const { fullname, cin, cne, phoneNumber, schoolName, cv, motivationLetter } = data;
+const EmployeeFields = ({ data, setData, errors  }) => {
+  const { fullname, cin, phoneNumber, educationLevel, cv, motivationLetter } = data;
   const handleFileChange = (e, fieldName) => {
     const newData = { ...data };
     newData[fieldName] = e.target.files[0];
@@ -45,20 +45,6 @@ const StudentFields = ({ data, setData, errors  }) => {
       </div>
 
       <div className="py-2">
-        <InputLabel htmlFor="cne" value="CNE" />
-        <TextInput
-          id="cne"
-          name="cne"
-          type="text"
-          value={cne || ''}
-          onChange={(e) => setData({ ...data, cne: e.target.value })}
-          className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
-          required
-        />
-        <InputError message={errors.cne} />
-      </div>
-
-      <div className="py-2">
         <InputLabel htmlFor="phoneNumber" value="Num Téléphone" />
         <PhoneInput
           country={'ma'}
@@ -74,24 +60,23 @@ const StudentFields = ({ data, setData, errors  }) => {
       </div>
 
       <div className="py-2">
-        <InputLabel htmlFor="schoolName" value="School/University Name" />
+        <InputLabel htmlFor="educationLevel" value="Education Level" />
         <select
-          id="schoolName"
-          name="schoolName"
-          value={schoolName || ''}
-          onChange={(e) => setData({ ...data, schoolName: e.target.value })}
+          id="educationLevel"
+          name="educationLevel"
+          value={educationLevel || ''}
+          onChange={(e) => setData({ ...data, educationLevel: e.target.value })}
           className="w-full p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
           required
         >
-          <option value="">Select School/University</option>
-          {schoolData.map((school) => (
-            <option key={school.id} value={school.name}>{school.name}</option>
-          ))}
+          <option value="">Select Education Level</option>
+          <option value="Licence (BAC+3)">Licence (BAC+3)</option>
+          <option value="Master (BAC+5)">Master (BAC+5)</option>
+          <option value="Ingénieur (BAC+5)">Ingénieur (BAC+5)</option>
+          <option value="Doctorat (BAC+8)">Doctorat (BAC+8)</option>
         </select>
-        <InputError message={errors.schoolName} />
+        <InputError message={errors.educationLevel} />
       </div>
-
-      
 
       <div className="py-2">
         <InputLabel htmlFor="cv" value="Upload CV" />
@@ -120,4 +105,4 @@ const StudentFields = ({ data, setData, errors  }) => {
   );
 };
 
-export default StudentFields;
+export default EmployeeFields;

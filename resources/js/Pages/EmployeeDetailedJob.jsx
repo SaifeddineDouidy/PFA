@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import EmployeeLayout from '@/Layouts/EmployeeLayout';
 import { Head } from '@inertiajs/react';
 import CustomButton from '@/Components/CustomButton';
 import { AiOutlineSafetyCertificate } from "react-icons/ai";
@@ -10,7 +10,7 @@ export default function DetailedJob({ auth, job, company }) {
     const [selected, setSelected] = useState();
 
     return (
-        <AuthenticatedLayout user={user}>
+        <EmployeeLayout user={user} userId={user.id}>
             <Head title={job?.company?.companyName} />
             <div className="bg-grey-100">
                 <div className="bg-grey-100 overflow-hidden shadow-sm sm:rounded-lg">
@@ -136,6 +136,6 @@ export default function DetailedJob({ auth, job, company }) {
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </EmployeeLayout>
     );
 }

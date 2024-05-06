@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 use Inertia\Response;
 
 class AuthenticatedSessionController extends Controller
@@ -27,26 +28,35 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-        public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
+    
         $request->session()->regenerate();
     
         $role = $request->user()->role;
-        // Store the role in the session
-        session(['user_role' => $role]);
-    
-        return redirect()->route('dashboard');
-            /* 
-            case 'guest':
-                return redirect()->route('guest.dashboard');
-                break;
-            */
         
+        // Assuming you have access to the userId value
+        $userId = $request->user()->id;
+        
+        // Store the role and userId in the session
+        session(['user_role' => $role, 'userId' => $userId]);
+        \Log::info("User role: {$role}");
 
-        //return redirect()->intended(route('dashboard', absolute: false));
+        switch ($role) {
+            case 'employee':
+                // Include userId in the route parameters
+                return redirect()->route('employee.dashboard', ['userId' => $userId]);
+                break;
+            case 'company':
+                return redirect()->route('company.dashboard', ['userId' => $userId]);
+                break;
+            default:
+                return redirect()->route('dashboard');
+        }
     }
+    
+
 
 
     /**

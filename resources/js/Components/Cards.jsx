@@ -1,7 +1,6 @@
 import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { usePage, useForm } from '@inertiajs/react';
-import ApplicationsPostsPage from '../Pages/ApplicationsPostsPage'
 import { FiMapPin, FiClock, FiDollarSign, FiCalendar, FiSave, FiArrowRight } from 'react-icons/fi';
 import { InertiaLink, Link } from '@inertiajs/inertia-react';
 
@@ -12,7 +11,7 @@ const Cards = ({ data, companies, savePost }) => {
     const company = companies.find(c => c.id === company_id);
     const companyName = company ? company.companyName : 'Unknown Company';
 
-    
+    // Handle the save post functionality
     const handleSavePost = async () => {
         try {
             console.log(id);
@@ -67,6 +66,8 @@ const Cards = ({ data, companies, savePost }) => {
           }
         }
       };
+
+      // Handle the apply functionality
       const handleApply = () => {
         const { post } = useForm();
       
@@ -86,12 +87,15 @@ const Cards = ({ data, companies, savePost }) => {
         <section className=''>
             <div className='flex gap-4 flex-col sm:flex-row items-start'>
                 <div>
+                    {/* Company name */}
                     <h4 className='text-primary mb-1'>{companyName}</h4>
+                    {/* Job title */}
                     <div className="text-lg font-semibold mb-2 hover:text-blue">
                         <Link href={`/detailjobs/${id}`} className="hover:text-blue-500 transition-colors">
                             {jobTitle}
                         </Link>
                     </div>
+                    {/* Job details */}
                     <div className='text-primary/70 text-base flex flex-wrap gap-2 mb-2'>
                     <span className='flex items-center gap-2'><FiMapPin aria-label="Job Location" /> {jobLocation}</span>
                         <span className='flex items-center gap-2'><FiClock /> {employmentType}</span>
@@ -100,7 +104,9 @@ const Cards = ({ data, companies, savePost }) => {
                         )}
                         <span className='flex items-center gap-2'><FiCalendar /> {postingDate}</span>
                     </div>
+                    {/* Job description */}
                     <p className='text-base text-primary/70'>{description}</p>
+                    {/* Buttons */}
                     <div className='flex justify-start mt-4 gap-2'>
                 <button onClick={handleSavePost} className='flex items-center gap-2 bg-blue text-white px-4 py-2 rounded-md hover:bg-primary/80 transition-colors'>
                     <FiSave />

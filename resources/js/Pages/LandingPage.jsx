@@ -5,7 +5,7 @@ import Content from '../Components/Content'
 import Footer from '../Components/Footer'
 import AboutUs from '../Components/AboutUs'
 
-function PageAccueil() {
+function LandingPage() {
   
 
   return (
@@ -19,4 +19,4 @@ function PageAccueil() {
   )
 }
 
-export default PageAccueil
+export default LandingPage

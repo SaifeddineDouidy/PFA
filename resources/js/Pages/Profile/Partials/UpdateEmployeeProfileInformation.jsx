@@ -1,48 +1,82 @@
+import {useState, useRef} from 'react'
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import PhoneInput from 'react-phone-input-2';
 import TextInput from '@/Components/TextInput';
 import { useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
-import UpdateFiles from './UpdateFiles';
+//import UpdateFiles from './UpdateFiles';
 
 export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, status, className = '' }) {
     const { user } = usePage().props.auth;
+    const emp = usePage().props.employee;
+
+    console.log('User : ', user, 'Employee' , emp)
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        fullname: user.fullname,
+        fullname: emp.fullname,
         email: user.email,
-        cv_path: user.cv_path,
-        motivation_letter_path: user.motivation_letter_path,
+        cin: emp.cin, 
+        phoneNumber: emp.phoneNumber,
+        educationLevel: emp.educationLevel,
+
     });
+
+    // Create refs for the fullname, cin, and educationLevel inputs
+    const fullnameInputRef = useRef(null);
+    const cinInputRef = useRef(null);
+    const educationLevelSelectRef = useRef(null);
+    const phoneNumberSelectRef = useRef(null);
+
+    // Function to focus the fullname input field
+    const focusFullNameInput = () => {
+        fullnameInputRef.current.focus();
+    };
+
+    // Function to focus the phoneNumber input field
+    const focusPhoneNumberInput = () => {
+        phoneNumberInputRef.current.focus();
+    };
+
+    // Function to focus the cin input field
+    const focusCinInput = () => {
+        cinInputRef.current.focus();
+    };
+
+    // Function to focus the educationLevel select field
+    const focusEducationLevelSelect = () => {
+        educationLevelSelectRef.current.focus();
+    };
 
     const submit = (e) => {
         e.preventDefault();
 
         const formData = {};
-        if (data.fullname !== user.fullname) {
+        if (data.fullname !== emp.fullname) {
             formData.fullname = data.fullname;
+        }
+        if (data.cin !== user.cin) {
+            formData.cin = data.cin;
+        }
+        if (data.phoneNumber !== user.phoneNumber) {
+            formData.phoneNumber = data.phoneNumber;
+        }
+        if (data.educationLevel !== user.educationLevel) {
+            formData.educationLevel = data.educationLevel;
         }
         if (data.email !== user.email) {
             formData.email = data.email;
         }
-        if (data.cv_path !== user.cv_path) {
-            formData.cv_path = data.cv_path;
-        }
-        if (data.motivation_letter_path !== user.motivation_letter_path) {
-            formData.motivation_letter_path = data.motivation_letter_path;
-        }
-
         patch(route('employee.profile.update'), formData);
     };
-
     return (
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">Employee Profile Information</h2>
 
                 <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information, email address, CV, and motivation letter.
+                    Update your account's profile information.
                 </p>
             </header>
 
@@ -56,13 +90,59 @@ export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, stat
                         className="mt-1 block w-full"
                         value={data.fullname}
                         onChange={(e) => setData('fullname', e.target.value)}
-                        isFocused
+                        ref={fullnameInputRef} // Attach ref here
                         autoComplete="fullname"
                     />
 
                     <InputError className="mt-2" message={errors.fullname} />
                 </div>
+                <div>
+                    <InputLabel htmlFor="cin" value="CIN" />
 
+                    <TextInput
+                        id="cin"
+                        className="mt-1 block w-full text-primary"
+                        value={data.cin}
+                        onChange={(e) => setData('cin', e.target.value)}
+                        ref={cinInputRef} // Attach ref here
+                        autoComplete="cin"
+                    />
+
+                    <InputError className="mt-2" message={errors.cin} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="educationLevel" value="Education Level" />
+                    <select
+                        id="educationLevel"
+                        name="educationLevel"
+                        value={data.educationLevel}
+                        onChange={(e) => setData('educationLevel', e.target.value)}
+                        ref={educationLevelSelectRef} // Attach ref here
+                        className="w-full text-primary p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
+                    >
+                        <option value="">Select Education Level</option>
+                        <option value="Licence (BAC+3)">Licence (BAC+3)</option>
+                        <option value="Master (BAC+5)">Master (BAC+5)</option>
+                        <option value="Ingénieur (BAC+5)">Ingénieur (BAC+5)</option>
+                        <option value="Doctorat (BAC+8)">Doctorat (BAC+8)</option>
+                    </select>
+                    <InputError message={errors.educationLevel} />
+                </div>
+                <div>
+                    <InputLabel htmlFor="phoneNumber" value="Num Téléphone" />
+                    <PhoneInput
+                    country={'ma'}
+                    value={data.phoneNumber}
+                    className='text-primary'
+                    onChange={(phone) => setData({ ...data, phoneNumber: phone })}
+                    inputProps={{
+                        name: 'phoneNumber',
+                        id: 'phoneNumber',
+                        style: { width: '100%' }
+                    }}
+                    />
+                    <InputError message={errors.phoneNumber} />
+                </div>
 
                 {/* Common fields */}
                 <div>
@@ -104,7 +184,7 @@ export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, stat
 
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing} className='mt-5'>Save</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -117,7 +197,7 @@ export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, stat
                     </Transition>
                 </div>
 
-                <UpdateFiles className="max-w-xl mt-5" />
+            {/*<UpdateFiles className="max-w-xl mt-5" />*/}
                 
             </form>
         </section>

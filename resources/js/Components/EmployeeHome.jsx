@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Banner } from './Banner';
 import { Link } from '@inertiajs/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import Cards from './Cards';
-import Posts from './Posts';
-import ApplicationsPostsPage from '@/Pages/ApplicationsPostsPage';
+import { Posts } from './Posts';
 import FiltersSide from './FiltersSide';
 
 const EmployeeHome = () => {
+  // State variables
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
-  const [query, setQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocations, setSelectedLocations] = useState([]);
   const [selectedSalary, setSelectedSalary] = useState([]);
   const [selectedSalaryType, setSelectedSalaryType] = useState([]);
@@ -22,30 +22,27 @@ const EmployeeHome = () => {
   const [selectedEmploymentType, setSelectedEmploymentType] = useState([]);
   const [selectedDate, setSelectedDate] = useState([]);
 
-  const [savedPosts, setSavedPosts] = useState([]);
 
+  // Fetch posts from server on component mount
   useEffect(() => {
     setIsLoading(true);
     axios.get('/posts')
       .then(response => {
         setPosts(response.data);
         setIsLoading(false);
-        console.log(response.data);
       })
       .catch(error => console.error('Error fetching posts:', error));
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setCurrentPage(1);
-    const filteredPosts = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, query);
+  // Handle form submission
+  const handleSubmit = (title, location) => {
+    setCurrentPage(1); // Reset to the first page
+    const filteredPosts = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, title, location);
     setPosts(filteredPosts);
+    setSearchQuery(title || location); // Set the search query based on the input values
   };
 
-  const handleInputChange = (event) => {
-    setQuery(event.target.value);
-  };
-
+  // Handle location change
   const handleLocationChange = (event) => {
     const location = event.target.value;
     const isChecked = event.target.checked;
@@ -58,19 +55,19 @@ const EmployeeHome = () => {
        }
     });
   };
-   
-  
 
+
+  // Handle filter change
   const handleFilterChange = (filterType, value, isChecked = true) => {
     switch (filterType) {
       case 'location':
-      if (isChecked) {
-        setSelectedLocations([...selectedLocations, value]);
-      } else {
-        setSelectedLocations(selectedLocations.filter(loc => loc !== value));
-      }
-      setCurrentPage(1);
-      break;
+        if (isChecked) {
+          setSelectedLocations([...selectedLocations, value]);
+        } else {
+          setSelectedLocations(selectedLocations.filter(loc => loc !== value));
+        }
+        setCurrentPage(1);
+        break;
       case 'salary':
         if (selectedSalary.includes(value)) {
           setSelectedSalary(selectedSalary.filter(s => s !== value));
@@ -85,52 +82,59 @@ const EmployeeHome = () => {
           setSelectedSalaryType([...selectedSalaryType, value]);
         }
         break;
-     
-        case 'date':
-          if (isChecked) {
-            setSelectedDate([...selectedDate, value]);
-          } else {
-            setSelectedDate(selectedDate.filter(d => d !== value));
-          }
-          setCurrentPage(1);
-          break;
+      case 'date':
+        if (isChecked) {
+          setSelectedDate([...selectedDate, value]);
+        } else {
+          setSelectedDate(selectedDate.filter(d => d !== value));
+        }
+        setCurrentPage(1);
+        break;
       case 'work-exp':
         if (isChecked) {
-            setSelectedWorkExperience([...selectedWorkExperience, value]);
-          } else {
-            setSelectedWorkExperience(selectedWorkExperience.filter(t => t !== value));
-          }
-          setCurrentPage(1);
-          break;
-        case 'employment-type':
-          if (isChecked) {
-            setSelectedEmploymentType([...selectedEmploymentType, value]);
-          } else {
-            setSelectedEmploymentType(selectedEmploymentType.filter(t => t !== value));
-          }
-          setCurrentPage(1);
-          break;
+          setSelectedWorkExperience([...selectedWorkExperience, value]);
+        } else {
+          setSelectedWorkExperience(selectedWorkExperience.filter(t => t !== value));
+        }
+        setCurrentPage(1);
+        break;
+      case 'employment-type':
+        if (isChecked) {
+          setSelectedEmploymentType([...selectedEmploymentType, value]);
+        } else {
+          setSelectedEmploymentType(selectedEmploymentType.filter(t => t !== value));
+        }
+        setCurrentPage(1);
+        break;
       default:
         break;
     }
   };
-  
 
-  const filteredData = (posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, query) => {
+  // Filter posts based on selected filters
+  const filteredData = (posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, query, locationQuery) => {
     let filteredPosts = [...posts];
-
+  
     if (selectedLocations.length > 0) {
       filteredPosts = filteredPosts.filter(post => selectedLocations.some(location => post.jobLocation.toLowerCase().includes(location.toLowerCase())));
     }
-
+  
+    if (query && query.trim() !== '') {
+      filteredPosts = filteredPosts.filter(post => post.jobTitle && post.jobTitle.toLowerCase().includes(query.toLowerCase()));
+    }
+  
+    if (locationQuery && locationQuery.trim() !== '') {
+      filteredPosts = filteredPosts.filter(post => post.jobLocation.toLowerCase().includes(locationQuery.toLowerCase()));
+    }
+  
     if (selectedSalary.length > 0) {
       filteredPosts = filteredPosts.filter(post => selectedSalary.some(salary => parseInt(post.maxPrice) <= parseInt(salary)));
     }
-
+  
     if (selectedSalaryType.length > 0) {
-      filteredPosts = filteredPosts.filter(post => selectedSalaryType.some(type => post.salaryType.toLowerCase() === type.toLowerCase()));
+      filteredPosts = filteredPosts.filter(post => selectedSalaryType.some(type => post.salaryType.toLowerCase().includes(type.toLowerCase())));
     }
-
+  
     if (selectedDate.length > 0) {
       filteredPosts = filteredPosts.filter(post => {
         const postingDate = new Date(post.postingDate);
@@ -140,27 +144,22 @@ const EmployeeHome = () => {
         });
       });
     }
-
+  
     if (selectedWorkExperience.length > 0) {
-      filteredPosts = filteredPosts.filter(post => selectedWorkExperience.some(exp => post.experienceLevel.toLowerCase() === exp.toLowerCase()));
+      filteredPosts = filteredPosts.filter(post => selectedWorkExperience.some(exp => post.experienceLevel.toLowerCase().includes(exp.toLowerCase())));
     }
-
+  
     if (selectedEmploymentType.length > 0) {
       filteredPosts = filteredPosts.filter(post => selectedEmploymentType.some(employmentType => post.employmentType.toLowerCase().includes(employmentType.toLowerCase())));
     }
-
-    if (query) {
-      filteredPosts = filteredPosts.filter(post => post.jobTitle.toLowerCase().includes(query.toLowerCase()));
-    }
-
+  
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    filteredPosts = filteredPosts.slice(startIndex, endIndex);
-
-    return filteredPosts.map((data, i) => <Cards key={i} data={data} />);
+    return filteredPosts.slice(startIndex, endIndex);
   };
 
-  const result = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, query);
+  // Pagination functions
+  const result = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType);
 
   const nextPage = () => {
     if (currentPage < Math.ceil(result.length / itemsPerPage)) {
@@ -174,6 +173,7 @@ const EmployeeHome = () => {
     }
   };
 
+  // Fetch companies on component mount
   const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
@@ -184,6 +184,7 @@ const EmployeeHome = () => {
       .catch(error => console.error('Error fetching companies:', error));
   }, []);
 
+  // Clear all filters
   const clearFilters = () => {
     setSelectedLocations([]);
     setSelectedSalary([]);
@@ -198,12 +199,10 @@ const EmployeeHome = () => {
       checkbox.checked = false;
     });
   };
+
   return (
     <div className="">
       <Banner
-        query={query}
-        handleInputChange={handleInputChange}
-        handleLocationChange={handleLocationChange}
         handleSubmit={handleSubmit}
       />
       <div className="md:grid grid-cols-4 gap-8 lg:px-2 px-4 py-12 rounded bg-gray-100">
@@ -214,21 +213,27 @@ const EmployeeHome = () => {
             selectedLocations={selectedLocations}
             selectedWorkExperience={selectedWorkExperience}
             selectedEmploymentType={selectedEmploymentType}
+            selectedDate={selectedDate}
             handleLocationChange={handleLocationChange}
           />
-        
-      </div>
+        </div>
         <div className="col-span-2 bg-white p-4 rounded-sm">
           {isLoading ? (
             <p className="font-medium">Loading...</p>
           ) : result.length > 0 ? (
-            <Posts result={result} companies={companies}/>
+            <>
+              {searchQuery ? (
+                <p className="text-xl font-semibold flex justify-start mb-5">Searching for: "{searchQuery}"</p>
+              ) : null}
+              <Posts posts={result} companies={companies} />
+            </>
           ) : (
             <>
-              <h3 className="text-lg font-bold mb-2">{result.length} Jobs</h3>
+              <h3 className="text-lg font-bold mb-2">{filteredResult.length} Jobs</h3>
               <p className="flex justify-center">No jobs matched your filters!</p>
             </>
           )}
+
           {result.length > 0 && (
             <div className="flex justify-center mt-4 space-x-8">
               <button
@@ -255,7 +260,6 @@ const EmployeeHome = () => {
       </div>
       <ToastContainer />
     </div>
-    
   );
 };
 

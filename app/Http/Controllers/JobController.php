@@ -8,7 +8,7 @@ use App\Models\Job;
 
 class JobController extends Controller
 {
-    public function registerPost(Request $request)
+    public function Post(Request $request)
     {
         // Validate job-specific fields
         $validatedData = $request->validate([

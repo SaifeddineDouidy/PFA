@@ -2,15 +2,20 @@ import { useState, createContext, useContext, Fragment } from 'react';
 import { Link } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 
+// Create a React context for managing the dropdown state
 const DropDownContext = createContext();
 
+// Dropdown component - the main container for the dropdown
 const Dropdown = ({ children }) => {
+    // Use the useState hook to manage the open/close state of the dropdown
     const [open, setOpen] = useState(false);
 
+    // Function to toggle the open state of the dropdown
     const toggleOpen = () => {
         setOpen((previousState) => !previousState);
     };
 
+    // Provide the dropdown state and toggle function to the child components
     return (
         <DropDownContext.Provider value={{ open, setOpen, toggleOpen }}>
             <div className="relative">{children}</div>
@@ -18,37 +23,44 @@ const Dropdown = ({ children }) => {
     );
 };
 
+// Trigger component - the element that triggers the dropdown to open and close
 const Trigger = ({ children }) => {
+    // Get the dropdown state and toggle function from the context
     const { open, setOpen, toggleOpen } = useContext(DropDownContext);
 
     return (
         <>
+            {/* Render the trigger element and call the toggleOpen function when clicked */}
             <div onClick={toggleOpen}>{children}</div>
 
+            {/* Render a full-screen overlay when the dropdown is open, to close it when clicked outside */}
             {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)}></div>}
         </>
     );
 };
 
+// Content component - the dropdown menu content
 const Content = ({ align = 'right', width = '48', contentClasses = 'py-1 bg-white', children }) => {
+    // Get the dropdown state and setOpen function from the context
     const { open, setOpen } = useContext(DropDownContext);
 
+    // Determine the alignment classes based on the 'align' prop
     let alignmentClasses = 'origin-top';
-
     if (align === 'left') {
         alignmentClasses = 'ltr:origin-top-left rtl:origin-top-right start-0';
     } else if (align === 'right') {
         alignmentClasses = 'ltr:origin-top-right rtl:origin-top-left end-0';
     }
 
+    // Determine the width classes based on the 'width' prop
     let widthClasses = '';
-
     if (width === '48') {
         widthClasses = 'w-48';
     }
 
     return (
         <>
+            {/* Use the Transition component from @headlessui/react to animate the dropdown content */}
             <Transition
                 as={Fragment}
                 show={open}
@@ -59,6 +71,7 @@ const Content = ({ align = 'right', width = '48', contentClasses = 'py-1 bg-whit
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
             >
+                {/* Render the dropdown content */}
                 <div
                     className={`absolute z-50 mt-2 rounded-md shadow-lg ${alignmentClasses} ${widthClasses}`}
                     onClick={() => setOpen(false)}
@@ -70,6 +83,7 @@ const Content = ({ align = 'right', width = '48', contentClasses = 'py-1 bg-whit
     );
 };
 
+// DropdownLink component - a specialized link component for use within the dropdown
 const DropdownLink = ({ className = '', children, ...props }) => {
     return (
         <Link
@@ -84,6 +98,7 @@ const DropdownLink = ({ className = '', children, ...props }) => {
     );
 };
 
+// Export the Dropdown component and its child components
 Dropdown.Trigger = Trigger;
 Dropdown.Content = Content;
 Dropdown.Link = DropdownLink;

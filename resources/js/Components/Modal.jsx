@@ -2,12 +2,14 @@ import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
 export default function Modal({ children, show = false, maxWidth = '2xl', closeable = true, onClose = () => {} }) {
+    // Function to close the modal if closeable is true
     const close = () => {
         if (closeable) {
             onClose();
         }
     };
 
+    // Determine the max-width class based on the maxWidth prop
     const maxWidthClass = {
         sm: 'sm:max-w-sm',
         md: 'sm:max-w-md',
@@ -17,13 +19,16 @@ export default function Modal({ children, show = false, maxWidth = '2xl', closea
     }[maxWidth];
 
     return (
+        // Transition component for showing and hiding the modal
         <Transition show={show} as={Fragment} leave="duration-200">
             <Dialog
                 as="div"
                 id="modal"
+                // Container for the modal
                 className="fixed inset-0 flex overflow-y-auto px-4 py-6 sm:px-0 items-center z-50 transform transition-all"
-                onClose={close}
+                onClose={close} // Callback for closing the modal when clicking outside or pressing ESC
             >
+                {/* Background overlay */}
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -36,6 +41,7 @@ export default function Modal({ children, show = false, maxWidth = '2xl', closea
                     <div className="absolute inset-0 bg-gray-500/75" />
                 </Transition.Child>
 
+                {/* Modal content */}
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -46,9 +52,10 @@ export default function Modal({ children, show = false, maxWidth = '2xl', closea
                     leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
                     <Dialog.Panel
+                        // Modal panel with dynamic max-width class
                         className={`mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto ${maxWidthClass}`}
                     >
-                        {children}
+                        {children} {/* Render children inside the modal */}
                     </Dialog.Panel>
                 </Transition.Child>
             </Dialog>

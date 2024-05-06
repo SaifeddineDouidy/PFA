@@ -9,11 +9,14 @@ import {
 
 const Footer = () => {
     return (
+        // Wrap the entire footer in a container
         <div className='w-full bg-slate-900 text-gray-300 py-y px-2'>
             <div className='max-w-[1240px] mx-auto grid grid-cols-2 md:grid-cols-6 border-b-2 border-gray-600 py-8'>
+                {/* Solutions section */}
                 <div>
                     <h6 className='font-bold uppercase pt-2'>Solutions</h6>
                     <ul>
+                        {/* Use Inertia Link component for internal links */}
                         <li className='py-1'>
                             <Link href="/marketing" className='hover:underline'>Marketing</Link>
                         </li>
@@ -31,6 +34,8 @@ const Footer = () => {
                         </li>
                     </ul>
                 </div>
+
+                {/* Support section */}
                 <div>
                     <h6 className='font-bold uppercase pt-2'>Support</h6>
                     <ul>
@@ -40,6 +45,8 @@ const Footer = () => {
                         <li className='py-1'><Link href="/api-status" className='hover:underline'>API Status</Link></li>
                     </ul>
                 </div>
+
+                {/* Company section */}
                 <div>
                     <h6 className='font-bold uppercase pt-2'>Company</h6>
                     <ul>
@@ -50,6 +57,8 @@ const Footer = () => {
                         <li className='py-1'><Link href="/partners" className='hover:underline'>Partners</Link></li>
                     </ul>
                 </div>
+
+                {/* Legal section */}
                 <div>
                     <h6 className='font-bold uppercase pt-2'>Legal</h6>
                     <ul>
@@ -60,6 +69,8 @@ const Footer = () => {
                         <li className='py-1'><Link href="/conditions" className='hover:underline'>Conditions</Link></li>
                     </ul>
                 </div>
+
+                {/* Newsletter section */}
                 <div className='col-span-2 pt-8 md:pt-2'>
                     <p className='font-bold uppercase'>Subscribe to our newsletter</p>
                     <p className='py-4'>The latest news, articles, and resources, sent to your inbox weekly.</p>
@@ -71,9 +82,12 @@ const Footer = () => {
                     </form>
                 </div>
             </div>
+
+            {/* Copyright and social media section */}
             <div className='flex flex-col max-w-[1240px] px-2 py-4 mx-auto justify-between sm:flex-row text-center text-gray-500'>
                 <p className='py-4'>2023/2024 PFA, All rights reserved</p>
                 <div className='flex justify-between sm:w-[300px] pt-4 text-2xl'>
+                    {/* Use Inertia Link component for social media links */}
                     <Link href="#" className='hover:text-white duration-100'><FaFacebook /></Link>
                     <Link href="#" className='hover:text-white duration-100'><FaInstagram /></Link>
                     <Link href="#" className='hover:text-white duration-100'><FaTwitter /></Link>

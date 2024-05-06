@@ -19,6 +19,8 @@ class EmployeeProfileController extends ProfileController
      */
     public function edit(Request $request): Response
     {
+        \Log::info('REQUEST:', $request->all());
+
         $user = $request->user();
         $employee = Employee::where('user_id', $user->id)->first();
 
@@ -27,8 +29,10 @@ class EmployeeProfileController extends ProfileController
             'status' => session('status'),
             'employee' => [
                 'fullname' => $employee->fullname,
-                'cv_path' => $employee->cv_path,
-                'motivation_letter_path' => $employee->motivation_letter_path,
+                'cin' => $employee->cin,
+                'phoneNumber' => $employee->phoneNumber,
+                'educationLevel' => $employee->educationLevel,
+
             ],
         ]);
     }
@@ -52,11 +56,14 @@ class EmployeeProfileController extends ProfileController
         $user->save();
         $employee->save();
 
-        // Update the fullname in the employees table
+        // Update info in the employees table
         $employee->fullname = $request->input('fullname');
+        $employee->cin = $request->input('cin');
+        $employee->phoneNumber = $request->input('phoneNumber');
+        $employee->educationLevel = $request->input('educationLevel');
 
         // Handle CV file upload
-        if ($request->hasFile('cv')) {
+        {/*if ($request->hasFile('cv')) {
             $cvPath = $request->file('cv')->store('employee/cvs', 'public');
             $employee->cv_path = $cvPath;
         } elseif ($employee->cv_path) {
@@ -77,7 +84,7 @@ class EmployeeProfileController extends ProfileController
         } else {
             // If no Motivation Letter is uploaded and there's no existing one, set it to null
             $employee->motivation_letter_path = null;
-        }
+        }*/}
 
         $employee->save();
 

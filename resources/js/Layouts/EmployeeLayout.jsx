@@ -7,8 +7,7 @@ import { Link } from '@inertiajs/react';
 import { IoMdNotifications } from "react-icons/io";
 import { IoChatbox } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
-
-export default function Authenticated({ user, header, children }) {
+export default function AuthenticatedEmployee({ user, header, children, userId }) {
     // State to manage the visibility of the navigation dropdown
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
@@ -26,13 +25,13 @@ export default function Authenticated({ user, header, children }) {
 
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 {/* Navigation links */}
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                <NavLink href={route('employee.dashboard',{userId})} active={route().current('employee.dashboard')}>
                                     Home Page
                                 </NavLink>
-                                <NavLink href={route('saved-posts')} active={route().current('saved-posts')}>
+                                <NavLink href={route('saved-posts',{userId})} active={route().current('saved-posts')}>
                                     Saved Posts
                                 </NavLink>
-                                <NavLink href={route('my-applications')} active={route().current('my-applications')}>
+                                <NavLink href={route('my-applications',{user})} active={route().current('my-applications')}>
                                     My Applications
                                 </NavLink>
                             </div>
@@ -116,13 +115,13 @@ export default function Authenticated({ user, header, children }) {
                 <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                     <div className="pt-2 pb-3 space-y-1">
                         {/* Responsive navigation links */}
-                        <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
+                        <ResponsiveNavLink href={route('employee.dashboard',{userId})} active={route().current('employee.dashboard')}>
                             Home Page
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('saved-posts')} active={route().current('saved-posts')}>
+                        <ResponsiveNavLink href={route('saved-posts',{userId})} active={route().current('saved-posts')}>
                             Saved Posts
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink href={route('my-applications')} active={route().current('my-applications')}>
+                        <ResponsiveNavLink href={route('my-applications',{userId})} active={route().current('my-applications')}>
                             My Applications
                         </ResponsiveNavLink>
                         {/* Placeholder links for notifications and chat */}

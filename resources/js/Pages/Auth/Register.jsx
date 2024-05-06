@@ -29,9 +29,9 @@ export default function Register() {
     return (
         <GuestLayout>
             <Head title="Register" />
-           
+
             <form onSubmit={submit}>
-                <div>
+                <div className="mt-4">
                     <InputLabel htmlFor="name" value="Name" />
 
                     <TextInput
@@ -112,7 +112,6 @@ export default function Register() {
                     </PrimaryButton>
                 </div>
             </form>
-           
         </GuestLayout>
     );
 }

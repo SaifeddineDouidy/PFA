@@ -33,7 +33,7 @@ export default function Login({ status, canResetPassword }) {
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
             
             <div className="text-left">
-                    <h1 className="text-4xl font-bold mb-4">Login</h1>
+                    <h1 className="text-4xl font-bold text-primary mb-4">Login</h1>
                     <p className="text-gray-500 mb-8">Welcome! Please enter your details.</p>
             </div>
             <form onSubmit={submit}>
@@ -45,7 +45,7 @@ export default function Login({ status, canResetPassword }) {
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full"
+                        className="mt-1 block w-full text-primary"
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}

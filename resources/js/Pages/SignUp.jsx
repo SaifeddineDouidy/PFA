@@ -85,7 +85,7 @@ export default function Register() {
             <Head title="Register" />
             <div className="max-w-lg mx-auto mt-8">
                 <div className="text-left">
-                    <h1 className="text-4xl font-bold mb-4">Sign Up</h1>
+                    <h1 className="text-4xl font-bold mb-4 text-primary">Sign Up</h1>
                     <p className="text-gray-500 mb-8">Welcome! Please select your account type and fill in your details.</p>
                 </div>
                 <form onSubmit={submit}>
@@ -101,7 +101,7 @@ export default function Register() {
                                 checked={accountType === 'employee'}
                                 onChange={() => handleAccountTypeChange('employee')}
                             />
-                            <label htmlFor="employee" className="ml-2">Employee</label>
+                            <label htmlFor="employee" className="ml-2 text-primary">Employee</label>
                         </div>
                         <div className="flex items-center">
                             <input
@@ -112,7 +112,7 @@ export default function Register() {
                                 checked={accountType === 'company'}
                                 onChange={() => handleAccountTypeChange('company')}
                             />
-                            <label htmlFor="company" className="ml-2">Company</label>
+                            <label htmlFor="company" className="ml-2 text-primary">Company</label>
                         </div>
                     </div>
 

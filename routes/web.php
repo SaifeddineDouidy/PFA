@@ -27,20 +27,17 @@ Route::get('/posts', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/companies', [CompanyController::class, 'index'])->name('companies.index');
 
 
-// Welcome page route
-Route::get('/home', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+
 
 // Home page route
 Route::get('/', function () {
-    return Inertia::render('PageAccueil');
+    return Inertia::render('LandingPage');
 });
+
+// Home page route
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
 
 // Employee Home page route
 Route::get('/employee/home', function () {
@@ -53,49 +50,67 @@ Route::get('/signup', function () {
 })->name('signup');
 
 
-// Employee dashboard route
-Route::get('employee/dashboard', function () {
-    return Inertia::render('EmployeeDashboard');
+Route::get('employee/{userId}/dashboard', function ($userId) {
+    // Your logic here
+    return Inertia::render('EmployeeDashboard', [
+        'userId' => $userId,
+        // Other data as needed
+    ]);
 })->name('employee.dashboard');
 
+
+
 // Company dashboard route
-Route::get('/company/dashboard', function () {
-    return Inertia::render('CompanyDashboard');
+Route::get('/company{userId}/dashboard', function ($userId) {
+    return Inertia::render('CompanyDashboard', [
+        'userId' => $userId,
+        // Pass any other data you need to your component
+    ]);
 })->name('company.dashboard');
 
-// Dashboard route
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 
-// Saved Posts routes
-Route::get('/saved-posts', [SavedPostsController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('saved-posts');
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Route for serving JSON data
+    Route::get('/api/saved-posts', [SavedPostsController::class, 'index'])->name('api.saved-posts.index');
 
-Route::post('/saved-posts', [SavedPostsController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('saved-posts.store');
+    // Route for rendering the HTML page
+    Route::get('/saved-posts', [SavedPostsController::class, 'showPage'])->name('saved-posts');
 
-Route::delete('/saved-posts', [SavedPostsController::class, 'destroy'])
-    ->middleware(['auth', 'verified'])
-    ->name('saved-posts.destroy');
+    // Route for saving a post
+    Route::post('/saved-posts', [SavedPostsController::class, 'store'])->name('saved-posts.store');
 
+    // Route for deleting a saved post
+    Route::delete('/saved-posts', [SavedPostsController::class, 'destroy'])->name('saved-posts.destroy');
+});
+
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Route to display the application form for a specific job post
     Route::get('/applications/{postId}', function ($postId) {
         $job = Job::findOrFail($postId);
         $company = $job->company;
-    
-        return Inertia::render('ApplicationsPostsPage', [
+
+        return Inertia::render('EmployeeApplicationsPostsPage', [
             'job' => $job,
             'company' => $company,
-            'postId' => $postId, // Explicitly pass postId
+            'postId' => $postId,
             'auth' => [
                 'user' => auth()->user(),
             ],
         ]);
-    })->name('applications.show')->middleware(['auth', 'verified']);
-    
+    })->name('applications.create');
+
+    // Route to handle the application submission
+    Route::post('/applications', [ApplicationController::class, 'store'])->name('applications.store');
+
+    // Route to display the details of a specific application
+    Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
+    // Route to display the applications submitted by the user
+    Route::get('/my-applications', [ApplicationController::class, 'myApplications'])->name('my-applications');
+});
+
+
 
 // Job Details Route
 Route::get('/detailjobs/{id}', function ($id) {
@@ -104,7 +119,7 @@ Route::get('/detailjobs/{id}', function ($id) {
     $company = $job->company;
 
     // Pass the job data to the DetailedJob component
-    return Inertia::render('DetailedJob', [
+    return Inertia::render('EmployeeDetailedJob', [
         'job' => $job,
         'company' => $company,
         'auth' => [

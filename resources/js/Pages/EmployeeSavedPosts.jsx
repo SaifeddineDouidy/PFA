@@ -1,32 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiMapPin, FiClock, FiDollarSign, FiCalendar, FiTrash, FiSearch, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Link } from '@inertiajs/inertia-react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
-import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
+import EmployeeLayout from '../Layouts/EmployeeLayout';
 
 const SavedPostsPage = ({ auth, savedPosts }) => {
   const { user } = auth;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState(null);
+
   const [filterQuery, setFilterQuery] = useState('');
   const [sortBy, setSortBy] = useState('posting_date');
   const [currentPage, setCurrentPage] = useState(1);
-  const [localSavedPosts, setLocalSavedPosts] = useState(savedPosts); // Local state for saved posts
+  const [localSavedPosts, setLocalSavedPosts] = useState(savedPosts);
   const postsPerPage = 10;
+  const modalRef = useRef(null);
 
-  // Update localSavedPosts whenever savedPosts prop changes
-    useEffect(() => {
-        setLocalSavedPosts(savedPosts);
-    }, [savedPosts]);
+  // Fetch saved posts
+  useEffect(() => {
+    fetchSavedPosts();
+  }, []);
 
   // Calculate time passed for each post
   const currentTime = new Date();
- 
+
   // Use localSavedPosts instead of savedPosts for filtering, sorting, and pagination
- const updatedSavedPosts = localSavedPosts.map(post => ({
+  const updatedSavedPosts = localSavedPosts.map(post => ({
     ...post,
     timePassed: Math.floor((currentTime - new Date(post.saved_at)) / (1000 * 60 * 60 * 24))
- }));
+  }));
 
   // Filtering and sorting logic
   const filteredSavedPosts = updatedSavedPosts.filter((post) =>
@@ -51,7 +56,7 @@ const SavedPostsPage = ({ auth, savedPosts }) => {
     const diffInMinutes = Math.floor(diffInSeconds / 60);
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);
-  
+
     if (diffInDays > 0) {
       return `${diffInDays} days ago`;
     } else if (diffInHours > 0) {
@@ -75,15 +80,40 @@ const SavedPostsPage = ({ auth, savedPosts }) => {
     setCurrentPage(pageNumber);
   };
 
-  const handleDeletePost = async (postId) => {
-    console.log(postId)
+  // Handlers
+  const handleDeletePost = (postId) => {
+    console.log("Post Id : ", postId)
+    setSelectedPostId(postId);
+    setIsModalOpen(true);
+    modalRef.current.showModal();
+  };
+
+  const fetchSavedPosts = async () => {
     try {
-      await axios.delete('/saved-posts', {
-        data: { postId: postId }, // Sending a single postId
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.get('/api/saved-posts');
+      if (!Array.isArray(response.data)) {
+        console.error('Expected an array, got:', response.data);
+        return; // Or handle this case appropriately
+      }
+      setLocalSavedPosts(response.data);
+    } catch (error) {
+      console.error('Error fetching saved posts:', error.message);
+    }
+  };
+
+  const confirmDelete = async () => {
+    
+    try {
+      const params = { postId: selectedPostId };
+      axios.delete('/saved-posts', { params })
+      .then(response => {
+          console.log('Resource deleted successfully:', response.data);
+        })
+      .catch(error => {
+          console.error('Error deleting resource:', error);
+        });
+
+
       toast.success('Post removed from saved posts!', {
         position: "top-right",
         autoClose: 3000,
@@ -94,11 +124,16 @@ const SavedPostsPage = ({ auth, savedPosts }) => {
         progress: undefined,
         theme: "light",
       });
-      setLocalSavedPosts(localSavedPosts.filter(post => post.job_id !== postId));
-      // Re-fetch saved posts after deletion
-      // You might need to implement a method to re-fetch saved posts or update the state directly
+      console.log('Confirming deletion of post with ID:', selectedPostId);
+
+      // Close the modal after successful deletion and re-fetch
+      modalRef.current.close();
+      // Re-fetch saved posts after successful deletion
+      await fetchSavedPosts();
+
+      
     } catch (error) {
-      console.error('Error deleting saved post:', error.message);
+      console.error('Error deleting saved post:', error.message, error);
       toast.error('Error removing post from saved posts. Please try again later.', {
         position: "top-right",
         autoClose: 3000,
@@ -111,16 +146,26 @@ const SavedPostsPage = ({ auth, savedPosts }) => {
       });
     }
   };
-   
 
   return (
-    <AuthenticatedLayout user={user}>
+    <EmployeeLayout user={user} userId={user.id}>
       <Head title="Saved Posts" />
+      <dialog ref={modalRef} className='modal'>
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Confirm Deletion</h3>
+          <p className="py-4">Are you sure you want to delete this post?</p>
+          <div className="modal-action">
+            <button className="btn" onClick={() => modalRef.current.close()}>Cancel</button>
+            <button className="btn btn-red" onClick={confirmDelete}>Delete</button>
+          </div>
+        </div>
+      </dialog>
+
       <div className="bg-white p-4 rounded-sm">
-        <h2 className="text-2xl font-bold mb-4">Saved Posts</h2>
+        <h2 className="text-2xl font-bold mb-4 text-primary">Saved Posts</h2>
         <div className="mb-4">
           <div className="flex items-center mb-2">
-            <label htmlFor="filter" className="mr-2">Filter:</label>
+            <label htmlFor="filter" className="mr-2 text-primary">Filter:</label>
             <input
               type="text"
               id="filter"
@@ -131,10 +176,10 @@ const SavedPostsPage = ({ auth, savedPosts }) => {
             />
           </div>
           <div className="flex justify-end">
-            <label htmlFor="sort-by" className="mr-4 mt-2">Sort by:</label>
+            <label htmlFor="sort-by" className="mr-4 mt-2 text-primary">Sort by:</label>
             <select
               id="sort-by"
-              className="border border-gray-300 rounded-md px-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="border text-primary border-gray-300 rounded-md px-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
@@ -147,13 +192,13 @@ const SavedPostsPage = ({ auth, savedPosts }) => {
         {currentSavedPosts.length === 0 ? (
           <p>You haven't saved any posts yet.</p>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {currentSavedPosts.map((post) => (
               <div key={post.id} className="bg-gray-100 p-4 rounded-md">
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="text-lg font-semibold hover:text-blue-500 transition-colors">
-                      <Link href={`/detailjobs/${post.job_id}`}>{post.job_title}</Link>
+                      <Link href={`/detailjobs/${post.job_id}`} className='text-primary'>{post.job_title}</Link>
                     </div>
                     <div className="text-primary/70 text-base flex flex-wrap gap-2 mb-2">
                       <span className="flex items-center gap-2">
@@ -239,7 +284,7 @@ const SavedPostsPage = ({ auth, savedPosts }) => {
         )}
         <ToastContainer />
       </div>
-    </AuthenticatedLayout>
+    </EmployeeLayout>
   );
 };
 

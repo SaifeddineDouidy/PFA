@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Head, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { FiMapPin, FiClock, FiDollarSign, FiCalendar } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -60,6 +60,7 @@ const ApplicationsPostsPage = ({ auth, job, company }) => {
 
     const handleApplicationSubmit = async () => {
         try {
+            console.log(job.id)
             const formData = new FormData();
             formData.append('cv_file', cvFile);
             if (motivationLetter) {
@@ -153,24 +154,6 @@ const ApplicationsPostsPage = ({ auth, job, company }) => {
                    
                         <div className="p-4 border border-gray-300 rounded-md w-full max-w-md">
                             <h3 className="text-xl text-primary font-bold mb-4">Application Form</h3>
-                            {/*<div className="mb-4">
-                                <label htmlFor="name" className="block text-primary font-medium mb-2">
-                                    Name:
-                                </label>
-                                <input type="text" className="input input-bordered input-primary w-full" />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="email" className="block text-primary font-medium mb-2">
-                                    Email:
-                                </label>
-                                <input type="email" className="input input-bordered input-primary bg-neutral w-full" />
-                            </div>
-                            <div className="mb-7">
-                                <label htmlFor="phone" className="block text-primary font-medium mb-2">
-                                    Phone:
-                                </label>
-                                <input type="tel" className="input input-bordered input-primary w-full" />
-                        </div>*/}
                             <div className="mb-4">
                             <FileInput label="Upload CV" name="cv" value={cvFile} onChange={handleCvFileChange} />
                             </div>

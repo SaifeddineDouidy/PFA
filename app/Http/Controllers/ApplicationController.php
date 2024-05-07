@@ -31,27 +31,28 @@ class ApplicationController extends Controller
 
     public function store(Request $request)
     {
-            // Log the entire request data
-            Log::info('Request Data:', $request->all());        
-            $validatedData = $request->validate([
-                'cv_file' => 'required|file|max:2048', // maximum file size of 2MB
-                'motivation_letter' => 'nullable|file|max:2048', // Make motivation_letter nullable (optional)
-                'job_id' => 'required|exists:company_jobs,id',
-                'company_id' => 'required|exists:companies,id',
-            ], [
-                'cv_file.required' => 'Please upload a CV file.',
-                'cv_file.file' => 'The CV file must be a valid file.',
-                'cv_file.max' => 'The CV file must not exceed 2MB in size.',
-                'motivation_letter.file' => 'The motivation letter must be a valid file.',
-                'motivation_letter.max' => 'The motivation letter must not exceed 2MB in size.',
-                'job_id.required' => 'The job ID is required.',
-                'job_id.exists' => 'The selected job does not exist.',
-                'company_id.required' => 'The company ID is required.',
-                'company_id.exists' => 'The selected company does not exist.',
-            ]);
-
+        // Log the entire request data
+        Log::info('Request Data:', $request->all());
+    
+        $validatedData = $request->validate([
+            'cv_file' => 'required|file|max:2048', // maximum file size of 2MB
+            'motivation_letter' => 'nullable|file|max:2048', // Make motivation_letter nullable (optional)
+            'job_id' => 'required|exists:company_jobs,id',
+            'company_id' => 'required|exists:companies,id',
+        ], [
+            'cv_file.required' => 'Please upload a CV file.',
+            'cv_file.file' => 'The CV file must be a valid file.',
+            'cv_file.max' => 'The CV file must not exceed 2MB in size.',
+            'motivation_letter.file' => 'The motivation letter must be a valid file.',
+            'motivation_letter.max' => 'The motivation letter must not exceed 2MB in size.',
+            'job_id.required' => 'The job ID is required.',
+            'job_id.exists' => 'The selected job does not exist.',
+            'company_id.required' => 'The company ID is required.',
+            'company_id.exists' => 'The selected company does not exist.',
+        ]);
+    
         $user = Auth::user();
-
+    
         try {
             // Attempt to find an employee by email. If not found, it will throw a ModelNotFoundException.
             $employee = Employee::where('email', $user->email)->firstOrFail();
@@ -59,8 +60,7 @@ class ApplicationController extends Controller
             // Handle the exception, e.g., return an error response or redirect the user.
             return abort(404, 'Employee not found');
         }
-
-
+    
         $cvPath = $request->file('cv_file')->store('employees/cvs', 'public');
         // Check if motivation_letter is present and store it; otherwise, skip this step
         if ($request->hasFile('motivation_letter')) {
@@ -68,7 +68,7 @@ class ApplicationController extends Controller
         } else {
             $motivationLetterPath = null; // Or whatever default value you prefer
         }
-        
+    
         $application = Applications::create([
             'employee_id' => $employee->id,
             'job_id' => $validatedData['job_id'],
@@ -77,8 +77,9 @@ class ApplicationController extends Controller
             'motivation_letter_path' => $motivationLetterPath,
             'status' => 'pending',
         ]);
-
-        return redirect()->route('applications.show', $application->id)
+    
+        // Redirect the user to the employee dashboard with the userId
+        return redirect()->route('employee.dashboard', ['userId' => $employee->id])
             ->with('success', 'Application submitted successfully!');
     }
 
@@ -91,6 +92,9 @@ class ApplicationController extends Controller
             'company' => $application->company,
         ]);
     }
+
+
+    
 
     public function myApplications()
 {
@@ -144,4 +148,50 @@ class ApplicationController extends Controller
         }),
     ]);
 }
+public function destroy(Applications $application)
+{
+    $user = Auth::user();
+
+    // Log the user ID and the application ID for debugging
+    \Log::info('User ID:', [$user->id]);
+    \Log::info('Application ID:', [$application->id]);
+
+    // Fetch the User model instance associated with the application's employee_id
+    $employeeUser = Employee::where('user_id', $user->id)->first();
+
+    // Log the employee user ID for debugging
+    \Log::info('Employee User ID:', [$employeeUser->user_id?? 'Not Found']);
+
+    // Check if the authenticated user is authorized to delete the application
+    if ($employeeUser->user_id!== $user->id || $application->status!== 'pending') {
+        \Log::warning('Unauthorized action attempted:', ['User ID' => $user->id, 'Application ID' => $application->id]);
+        return response()->json(['error' => 'Unauthorized action.'], 403);
+    }
+
+    try {
+        // Log the start of the deletion process
+        \Log::info('Attempting to delete application:', ['Application ID' => $application->id]);
+
+        $application->delete();
+
+        // Log the successful deletion
+        \Log::info('Application deleted successfully:', ['Application ID' => $application->id]);
+
+        // Return a JSON response indicating success
+        return response()->json(['success' => 'Application deleted successfully'], 200);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        // Log the error message
+        \Log::error('Error deleting application:', [$e->getMessage(), 'Application ID' => $application->id]);
+
+        // Return a JSON response indicating failure
+        return response()->json(['error' => 'Application not found.'], 404);
+    } catch (\Exception $e) {
+        // Log the error message
+        \Log::error('Error deleting application:', [$e->getMessage(), 'Application ID' => $application->id]);
+
+        // Return a JSON response indicating failure
+        return response()->json(['error' => 'An error occurred while processing your request.'], 500);
+    }
+}
+
 }

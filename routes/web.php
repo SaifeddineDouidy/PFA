@@ -34,15 +34,6 @@ Route::get('/', function () {
     return Inertia::render('LandingPage');
 });
 
-// Home page route
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
-
-// Employee Home page route
-Route::get('/employee/home', function () {
-    return Inertia::render('AuthPageAccueil');
-})->name('employee.home');
 
 // Register page route
 Route::get('/signup', function () {
@@ -104,10 +95,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route to handle the application submission
     Route::post('/applications', [ApplicationController::class, 'store'])->name('applications.store');
 
-    // Route to display the details of a specific application
-    Route::get('/applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
     // Route to display the applications submitted by the user
     Route::get('/my-applications', [ApplicationController::class, 'myApplications'])->name('my-applications');
+
+    // Route to delete an application
+    Route::delete('/applications/{application}', [ApplicationController::class, 'destroy'])->name('applications.destroy');
 });
 
 

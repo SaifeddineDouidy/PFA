@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FiMapPin, FiClock, FiDollarSign, FiCalendar, FiTrash, FiSearch, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Link } from '@inertiajs/inertia-react';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import EmployeeLayout from '../Layouts/EmployeeLayout';

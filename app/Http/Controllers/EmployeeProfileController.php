@@ -24,7 +24,7 @@ class EmployeeProfileController extends ProfileController
         $user = $request->user();
         $employee = Employee::where('user_id', $user->id)->first();
 
-        return Inertia::render('Profile/Edit', [
+        return Inertia::render('Profile/EmployeeEdit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'employee' => [

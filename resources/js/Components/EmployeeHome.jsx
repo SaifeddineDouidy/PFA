@@ -12,6 +12,7 @@ const EmployeeHome = () => {
   // State variables
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,21 +24,26 @@ const EmployeeHome = () => {
   const [selectedDate, setSelectedDate] = useState([]);
 
 
-  // Fetch posts from server on component mount
-  useEffect(() => {
-    setIsLoading(true);
-    axios.get('/posts')
-      .then(response => {
-        setPosts(response.data);
-        setIsLoading(false);
-      })
-      .catch(error => console.error('Error fetching posts:', error));
-  }, []);
+ // Fetch posts from server on component mount
+ useEffect(() => {
+  setIsLoading(true);
+  axios.get('/posts')
+   .then(response => {
+      setPosts(response.data);
+      setFilteredPosts(response.data); // Initialize filteredPosts with the original list of posts
+      setIsLoading(false);
+    })
+   .catch(error => console.error('Error fetching posts:', error));
+}, []);
 
-  const handleSubmit = (title, location) => {
-    setCurrentPage(1); // Reset to the first page
-    const filteredPosts = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, title, location);
-    setPosts(filteredPosts);
+// Handle form submission
+const handleSubmit = (title, location) => {
+  setCurrentPage(1); // Reset to the first page
+  const filteredPosts = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, title, location);
+  setFilteredPosts(filteredPosts);
+  setSearchQuery({ title: title, location: location }); // Set the search query as an object
+
+
   
     // Set the search query as a string
     if (title && location) {
@@ -234,7 +240,7 @@ const EmployeeHome = () => {
               Searching for: "{searchQuery}"
             </p>
           ) : null}
-          <Posts posts={result} companies={companies} />
+          <Posts posts={filteredPosts} companies={companies} />
         </>
       ) : (
         <>

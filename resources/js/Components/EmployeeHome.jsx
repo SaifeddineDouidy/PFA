@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Banner } from './Banner';
-import { Link } from '@inertiajs/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-import Cards from './Cards';
 import { Posts } from './Posts';
 import FiltersSide from './FiltersSide';
 
@@ -24,35 +22,24 @@ const EmployeeHome = () => {
   const [selectedDate, setSelectedDate] = useState([]);
 
 
- // Fetch posts from server on component mount
- useEffect(() => {
-  setIsLoading(true);
-  axios.get('/posts')
-   .then(response => {
-      setPosts(response.data);
-      setFilteredPosts(response.data); // Initialize filteredPosts with the original list of posts
-      setIsLoading(false);
-    })
-   .catch(error => console.error('Error fetching posts:', error));
-}, []);
+  // Fetch posts from server on component mount
+  useEffect(() => {
+    setIsLoading(true);
+    axios.get('/posts')
+    .then(response => {
+        setPosts(response.data);
+        setFilteredPosts(response.data); // Initialize filteredPosts with the original list of posts
+        setIsLoading(false);
+      })
+    .catch(error => console.error('Error fetching posts:', error));
+  }, []);
 
-// Handle form submission
-const handleSubmit = (title, location) => {
-  setCurrentPage(1); // Reset to the first page
-  const filteredPosts = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, title, location);
-  setFilteredPosts(filteredPosts);
-  setSearchQuery({ title: title, location: location }); // Set the search query as an object
-
-
-  
-    // Set the search query as a string
-    if (title && location) {
-      setSearchQuery(`${title} in ${location}`);
-    } else if (title) {
-      setSearchQuery(title);
-    } else {
-      setSearchQuery(location);
-    }
+  // Handle form submission
+  const handleSubmit = (title, location) => {
+    setCurrentPage(1); // Reset to the first page
+    const filteredPosts = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, title, location);
+    setFilteredPosts(filteredPosts);
+    setSearchQuery({ title, location }); // Set the search query as an object
   };
 
   // Handle location change
@@ -131,13 +118,15 @@ const handleSubmit = (title, location) => {
     if (selectedLocations.length > 0) {
       filteredPosts = filteredPosts.filter(post => selectedLocations.some(location => post.jobLocation.toLowerCase().includes(location.toLowerCase())));
     }
-  
-    if (query && query.trim() !== '') {
-      filteredPosts = filteredPosts.filter(post => post.jobTitle && post.jobTitle.toLowerCase().includes(query.toLowerCase()));
+    const trimmedTitle = query?.title?.trim();
+    if (trimmedTitle && trimmedTitle !== '') {
+      filteredPosts = filteredPosts.filter(post => post.jobTitle && post.jobTitle.toLowerCase().includes(trimmedTitle.toLowerCase()));
     }
   
-    if (locationQuery && locationQuery.trim() !== '') {
-      filteredPosts = filteredPosts.filter(post => post.jobLocation.toLowerCase().includes(locationQuery.toLowerCase()));
+    if (locationQuery && locationQuery.trim()!== '') {
+      filteredPosts = filteredPosts.filter(post => post.jobLocation && post.jobLocation.toLowerCase().includes(locationQuery.toLowerCase()));
+    } else if (query && query.location) {
+      filteredPosts = filteredPosts.filter(post => post.jobLocation && post.jobLocation.toLowerCase().includes(query.location.toLowerCase()));
     }
   
     if (selectedSalary.length > 0) {
@@ -170,6 +159,12 @@ const handleSubmit = (title, location) => {
     const endIndex = startIndex + itemsPerPage;
     return filteredPosts.slice(startIndex, endIndex);
   };
+
+  useEffect(() => {
+    const filtered = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, searchQuery);
+    setFilteredPosts(filtered);
+  }, [posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, searchQuery]);
+
 
   // Pagination functions
   const result = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType);
@@ -235,11 +230,27 @@ const handleSubmit = (title, location) => {
         <p className="font-medium">Loading...</p>
       ) : result.length > 0 ? (
         <>
-          {searchQuery ? (
-            <p className="text-xl font-semibold flex justify-start mb-5">
-              Searching for: "{searchQuery}"
-            </p>
-          ) : null}
+      {searchQuery? (
+        <div className="mb-5">
+          <p className="text-xl font-semibold mb-2">Search Results:</p>
+          <div className="flex flex-col gap-2">
+            {searchQuery?.title? (
+              <div className="flex items-center gap-2">
+                <span className="text-blue-500">Title:</span>
+                <span>{searchQuery.title.charAt(0).toUpperCase() + searchQuery.title.slice(1).toLowerCase()}</span>
+              </div>
+            ) : null}
+            {searchQuery?.location? (
+              <div className="flex items-center gap-2">
+                <span className="text-blue-500">Location:</span>
+                <span>{searchQuery.location.charAt(0).toUpperCase() + searchQuery.location.slice(1).toLowerCase()}</span>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
+
+
           <Posts posts={filteredPosts} companies={companies} />
         </>
       ) : (

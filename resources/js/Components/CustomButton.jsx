@@ -16,6 +16,7 @@ const CustomButton = ({ title, containerStyles, iconRight, type, onClick }) => {
 
       {/* If an 'iconRight' prop is provided, render it inside a div with some spacing */}
       {iconRight && <div className='ml-2'>{iconRight}</div>}
+      
     </button>
   );
 };

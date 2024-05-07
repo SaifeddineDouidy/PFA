@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('job_id');
             $table->unsignedBigInteger('company_id');
             $table->string('cv_path');
-            $table->string('motivation_letter_path');
+            $table->string('motivation_letter_path')->nullable();;
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
 

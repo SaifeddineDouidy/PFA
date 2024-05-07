@@ -1,9 +1,11 @@
-import {useState, useRef} from 'react'
+import {useRef} from 'react'
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import PhoneInput from 'react-phone-input-2';
 import TextInput from '@/Components/TextInput';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 //import UpdateFiles from './UpdateFiles';
@@ -11,8 +13,6 @@ import { Transition } from '@headlessui/react';
 export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, status, className = '' }) {
     const { user } = usePage().props.auth;
     const emp = usePage().props.employee;
-
-    console.log('User : ', user, 'Employee' , emp)
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
         fullname: emp.fullname,
@@ -50,27 +50,54 @@ export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, stat
     };
 
     const submit = (e) => {
-        e.preventDefault();
+        e.preventDefault()
 
-        const formData = {};
+        const formData = {}
         if (data.fullname !== emp.fullname) {
-            formData.fullname = data.fullname;
+            formData.fullname = data.fullname
         }
         if (data.cin !== user.cin) {
-            formData.cin = data.cin;
+            formData.cin = data.cin
         }
         if (data.phoneNumber !== user.phoneNumber) {
-            formData.phoneNumber = data.phoneNumber;
+            formData.phoneNumber = data.phoneNumber
         }
         if (data.educationLevel !== user.educationLevel) {
-            formData.educationLevel = data.educationLevel;
+            formData.educationLevel = data.educationLevel
         }
         if (data.email !== user.email) {
-            formData.email = data.email;
+            formData.email = data.email
         }
-        patch(route('employee.profile.update'), formData);
-    };
+
+        patch(route('employee.profile.update'), formData, {
+            onSuccess: () => {
+                toast.success('Profile information updated successfully!', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                })
+            },
+            onError: () => {
+                toast.error('There was an error updating your profile information. Please try again.', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                })
+            },
+        })
+    }
     return (
+        
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">Employee Profile Information</h2>
@@ -79,6 +106,16 @@ export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, stat
                     Update your account's profile information.
                 </p>
             </header>
+
+            <Transition
+                        show={recentlySuccessful}
+                        enter="transition ease-in-out"
+                        enterFrom="opacity-0"
+                        leave="transition ease-in-out"
+                        leaveTo="opacity-0"
+                    >
+                        <p className="mt-4 text-md text-[#27c747]">Saved.</p>
+            </Transition>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 {/* Employee-specific fields */}
@@ -133,6 +170,7 @@ export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, stat
                     <PhoneInput
                     country={'ma'}
                     value={data.phoneNumber}
+                    ref={phoneNumberSelectRef}
                     className='text-primary'
                     onChange={(phone) => setData({ ...data, phoneNumber: phone })}
                     inputProps={{
@@ -185,21 +223,12 @@ export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, stat
 
                 <div className="flex items-center gap-4">
                     <PrimaryButton disabled={processing} className='mt-5'>Save</PrimaryButton>
-
-                    <Transition
-                        show={recentlySuccessful}
-                        enter="transition ease-in-out"
-                        enterFrom="opacity-0"
-                        leave="transition ease-in-out"
-                        leaveTo="opacity-0"
-                    >
-                        <p className="text-sm text-[#00FF33]">Saved.</p>
-                    </Transition>
                 </div>
 
             {/*<UpdateFiles className="max-w-xl mt-5" />*/}
                 
             </form>
+            <ToastContainer />
         </section>
     );
 }

@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 import { FiTrash, FiClock, FiDollarSign, FiCalendar } from 'react-icons/fi';
 import axios from 'axios';
-import { InertiaLink, Link } from '@inertiajs/inertia-react';
+import { Link } from '@inertiajs/inertia-react';
 import { format } from 'date-fns';
 
 export default function MyApplications({auth}) {

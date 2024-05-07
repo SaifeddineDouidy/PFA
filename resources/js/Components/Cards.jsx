@@ -4,7 +4,7 @@ import { usePage, useForm } from '@inertiajs/react';
 import { FiMapPin, FiClock, FiDollarSign, FiCalendar, FiSave, FiArrowRight } from 'react-icons/fi';
 import { InertiaLink, Link } from '@inertiajs/inertia-react';
 
-const Cards = ({ data, companies, savePost }) => {
+const Cards = ({ data, companies}) => {
     const { id, company_id, jobTitle, minPrice, maxPrice, salaryType, jobLocation, experienceLevel, employmentType, postingDate, description } = data;
 
     // Find the company object that matches the company_id

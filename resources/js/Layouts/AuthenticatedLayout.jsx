@@ -50,7 +50,7 @@ export default function Authenticated({ user, header, children }) {
                                         </Dropdown.Trigger>
 
                                         {/* Dropdown content */}
-                                        <Dropdown.Content className="absolute right-0 mt-2 w-48 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                                        <Dropdown.Content className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                                             {/* User profile info */}
                                             <div className="py-1">
                                                 <div className="flex items-center px-4 py-3 border-b border-gray-200">

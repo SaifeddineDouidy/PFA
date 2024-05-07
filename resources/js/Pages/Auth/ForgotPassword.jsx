@@ -3,7 +3,9 @@ import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, useForm } from '@inertiajs/react';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS
+import { post } from '@inertiajs/server';
 /**
  * ForgotPassword component renders the forgot password form.
  * @param {string} status - The status message.
@@ -19,7 +21,34 @@ export default function ForgotPassword({ status }) {
     const submit = (e) => {
         e.preventDefault();
         // Send a post request to the password reset email route
-        post(route('password.email'));
+        post(route('password.email'), {
+            onSuccess: () => {
+                // On success, show a success toast
+                toast.success('Password reset email has been sent!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+            },
+            onError: (error) => {
+                // On error, show an error toast
+                toast.error('Failed to send password reset email. Please try again later.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+            },
+        });
     };
 
     return (
@@ -58,6 +87,7 @@ export default function ForgotPassword({ status }) {
                     </PrimaryButton>
                 </div>
             </form>
+            <ToastContainer /> {/* Place ToastContainer at a suitable location in your component tree */}
         </GuestLayout>
     );
 }

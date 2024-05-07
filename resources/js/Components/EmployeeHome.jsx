@@ -34,12 +34,19 @@ const EmployeeHome = () => {
       .catch(error => console.error('Error fetching posts:', error));
   }, []);
 
-  // Handle form submission
   const handleSubmit = (title, location) => {
     setCurrentPage(1); // Reset to the first page
     const filteredPosts = filteredData(posts, selectedLocations, selectedSalary, selectedSalaryType, selectedDate, selectedWorkExperience, selectedEmploymentType, title, location);
     setPosts(filteredPosts);
-    setSearchQuery(title || location); // Set the search query based on the input values
+  
+    // Set the search query as a string
+    if (title && location) {
+      setSearchQuery(`${title} in ${location}`);
+    } else if (title) {
+      setSearchQuery(title);
+    } else {
+      setSearchQuery(location);
+    }
   };
 
   // Handle location change
@@ -218,21 +225,23 @@ const EmployeeHome = () => {
           />
         </div>
         <div className="col-span-2 bg-white p-4 rounded-sm">
-          {isLoading ? (
-            <p className="font-medium">Loading...</p>
-          ) : result.length > 0 ? (
-            <>
-              {searchQuery ? (
-                <p className="text-xl font-semibold flex justify-start mb-5">Searching for: "{searchQuery}"</p>
-              ) : null}
-              <Posts posts={result} companies={companies} />
-            </>
-          ) : (
-            <>
-              <h3 className="text-lg font-bold mb-2">{filteredResult.length} Jobs</h3>
-              <p className="flex justify-center">No jobs matched your filters!</p>
-            </>
-          )}
+        {isLoading ? (
+        <p className="font-medium">Loading...</p>
+      ) : result.length > 0 ? (
+        <>
+          {searchQuery ? (
+            <p className="text-xl font-semibold flex justify-start mb-5">
+              Searching for: "{searchQuery}"
+            </p>
+          ) : null}
+          <Posts posts={result} companies={companies} />
+        </>
+      ) : (
+        <>
+          <h3 className="text-lg font-bold mb-2">{result.length} Jobs</h3>
+          <p className="flex justify-center">No jobs matched your filters!</p>
+        </>
+      )}
 
           {result.length > 0 && (
             <div className="flex justify-center mt-4 space-x-8">

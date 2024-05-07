@@ -13,9 +13,9 @@ const FileInput = ({ label, name, value, onChange }) => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         const fileExtension = file?.name.split('.').pop().toLowerCase();
-    
+
         if (fileExtension !== 'pdf') {
-            setFileError('Please upload a PDF file.');
+            setFileError(name === 'motivation_letter' ? 'Please upload a PDF file (optional).' : 'Please upload a PDF file.');
             e.target.value = ''; // Clear the file input
             setFileValue('');
         } else {
@@ -38,6 +38,7 @@ const FileInput = ({ label, name, value, onChange }) => {
                 onChange={(e) => handleFileChange(e)}
                 className="file-input file-input-bordered file-input-primary w-full"
                 accept=".pdf"
+                required={name !== 'motivation_letter'} // Remove the required attribute for motivation_letter
             />
             {fileError && <p className="text-red-500 text-sm mt-2">{fileError}</p>}
         </div>
@@ -45,10 +46,9 @@ const FileInput = ({ label, name, value, onChange }) => {
 };
 
 const ApplicationsPostsPage = ({ auth, job, company }) => {
-    const { postId } = usePage().props;
+    const { user } = auth;
     const [cvFile, setCvFile] = useState(null);
     const [motivationLetter, setMotivationLetter] = useState('');
-    const [post, setPost] = useState(null);
 
     const handleCvFileChange = (file) => {
         setCvFile(file);
@@ -62,7 +62,9 @@ const ApplicationsPostsPage = ({ auth, job, company }) => {
         try {
             const formData = new FormData();
             formData.append('cv_file', cvFile);
-            formData.append('motivation_letter', motivationLetter);
+            if (motivationLetter) {
+                formData.append('motivation_letter', motivationLetter);
+            }
             formData.append('job_id', job.id);
             formData.append('company_id', company.id);
             // Log the contents of the FormData object
@@ -105,11 +107,12 @@ const ApplicationsPostsPage = ({ auth, job, company }) => {
     return (
         <EmployeeLayout user={auth} userId={user.id}>
             <Head title="Apply for Job" />
-            <div className="bg-white p-4 rounded-sm">
+            <div className="bg-white p-4 rounded-sm h-screen">
                 <h2 className="text-2xl text-primary font-bold mb-4">Apply for {job.job_title}</h2>
                 <div className="flex w-full">
                     <div className=" bg-gray-200 grid h-full flex-grow card rounded-box p-4">
                         <div className="text-primary/70 text-base flex flex-wrap gap-2 mb-2">
+                            <h1 className="text-lg text-primary flex items-center">{job.jobTitle}</h1>
                             <span className="flex items-center gap-2">
                                 <FiMapPin aria-label="Job Location" />
                                 {job.jobLocation}

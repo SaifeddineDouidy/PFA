@@ -49,10 +49,10 @@ export default function AuthenticatedEmployee({ user, header, children, userId }
                                         </Dropdown.Trigger>
 
                                         {/* Dropdown content */}
-                                        <Dropdown.Content className="absolute right-0 mt-2 w-48 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                                        <Dropdown.Content className="absolute right-0 mt-2 w-50 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                                             {/* User profile info */}
                                             <div className="py-1">
-                                                <div className="flex items-center px-4 py-3 border-b border-gray-200">
+                                                <div className="flex items-center px-2 py-3 border-b border-gray-200">
                                                     <div>
                                                         <div className="font-medium text-gray-900">{user.name}</div>
                                                         <div className="text-gray-500 text-sm">{user.email}</div>
@@ -143,7 +143,7 @@ export default function AuthenticatedEmployee({ user, header, children, userId }
                             {/* Profile and logout links */}
                             <div className="mt-3 space-y-1">
                                 <ResponsiveNavLink href={user.role === 'employee' ? route('employee.profile.edit') : route('company.profile.edit')}>Profile</ResponsiveNavLink>
-                                <ResponsiveNavLink method="post" href={route('logout')} as="button">
+                                <ResponsiveNavLink method="post" href={route('logout')} as="button" className='text-red-500'>
                                     Log Out
                                 </ResponsiveNavLink>
                             </div>

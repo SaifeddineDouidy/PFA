@@ -51,7 +51,7 @@ const Navbar = () => {
             </ul>
             {/* Desktop Sign Up and Log In buttons */}
             <div className="space-x-5 hidden md:flex">
-                <Link to={route('signup')}>
+                <Link href={route('signup')}>
                     <button className="relative border-2 border-[#0073e6] bg-transparent px-5 py-2.5 font-medium text-[#0073e6] transition-colors duration-700 ease-in rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black hover:bg-[#0073e6] hover:text-white hover:scale-105 before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:origin-top-left before:scale-x-0 before:bg-blue before:transition-transform before:duration-700 before:content-[''] hover:before:scale-x-100">
                         Sign Up
                     </button>
@@ -67,7 +67,7 @@ const Navbar = () => {
                 {!nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
             </div>
             {/* Mobile navigation */}
-            <div className={!nav ? 'fixed left-0 top-0 w-64 h-full bg-white z-50 pt-24 transition-transform duration-300 ease-in-out transform translate-x-0' : 'fixed -left-full top-0 w-64 h-full bg-white z-50 pt-24 transition-transform duration-300 ease-in-out transform -translate-x-full'}>
+            <div className={!nav ? 'fixed left-0 top-0 w-64 h-full shadow-lg bg-[#F6F5F2] z-50 pt-24 transition-transform duration-300 ease-in-out transform translate-x-0' : 'fixed -left-full top-0 w-64 h-full bg-white z-50 pt-24 transition-transform duration-300 ease-in-out transform -translate-x-full'}>
                 <div className="flex flex-col h-full justify-between">
                     <div>
                         {/* Mobile logo */}
@@ -79,22 +79,22 @@ const Navbar = () => {
                         {/* Mobile navigation links */}
                         <ul className='p-4 space-y-4 text-lg uppercase lg:hidden'>
                             <ScrollLink to='about' spy={true} smooth={true} duration={500}>
-                                <li className='block p-4 text-[#042b49] hover:text-[#0073e6]'>About</li>
+                                <li className='block p-4 text-[#042b49] hover:text-[#0073e6] hover:cursor-pointer'>About</li>
                             </ScrollLink>
                             <ScrollLink to='contact' spy={true} smooth={true} duration={500}>
-                                <li className='block p-4 text-[#042b49] hover:text-[#0073e6]'>Contact</li>
+                                <li className='block p-4 text-[#042b49] hover:text-[#0073e6] hover:cursor-pointer'>Contact</li>
                             </ScrollLink>
                         </ul>
                     </div>
                     <div className="flex flex-col items-center mb-4 space-y-4">
                         {/* Mobile Sign Up and Log In buttons */}
                         <Link href={route('signup')}>
-                            <button className="relative border-2 border-[#0073e6] bg-transparent px-5 py-2.5 font-medium text-[#0073e6] transition-colors rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0073e6] hover:bg-[#0073e6] hover:text-white hover:scale-105 before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:origin-top-left before:scale-x-0 before:bg-white before:transition-transform before:duration-500 before:content-[''] hover:before:scale-x-100">
+                            <button className="relative border-2 border-[#0073e6] bg-transparent px-5 py-2.5 font-medium text-[#0073e6] transition-colors duration-700 ease-in rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black hover:bg-[#0073e6] hover:text-white hover:scale-105 before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:origin-top-left before:scale-x-0 before:bg-blue before:transition-transform before:duration-700 before:content-[''] hover:before:scale-x-100">
                                 Sign Up
                             </button>
                         </Link>
                         <Link href={route('login')}>
-                            <button className="relative border-2 border-[#0073e6] bg-transparent px-5 py-2.5 font-medium text-[#0073e6] transition-colors rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0073e6] hover:bg-[#0073e6] hover:text-white hover:scale-105 before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:origin-top-left before:scale-x-0 before:bg-white before:transition-transform before:duration-500 before:content-[''] hover:before:scale-x-100">
+                            <button className="relative border-2 border-[#0073e6] bg-transparent px-5 py-2.5 font-medium text-[#0073e6] transition-colors duration-700 ease-in rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black hover:bg-[#0073e6] hover:text-white hover:scale-105 before:absolute before:left-0 before:top-0 before:-z-10 before:h-full before:w-full before:origin-top-left before:scale-x-0 before:bg-blue before:transition-transform before:duration-700 before:content-[''] hover:before:scale-x-100">
                                 Log In
                             </button>
                         </Link>

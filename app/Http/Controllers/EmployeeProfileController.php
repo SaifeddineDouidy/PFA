@@ -44,7 +44,7 @@ class EmployeeProfileController extends ProfileController
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         \Log::info('EmployeeProfileController@update request data:', $request->all());
-        $user = $request->user();
+            $user = $request->user();
         $employee = Employee::where('user_id', $user->id)->first();
 
         // Update the user's profile information

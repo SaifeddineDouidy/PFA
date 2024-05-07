@@ -151,12 +151,12 @@ const SavedPostsPage = ({ auth, savedPosts }) => {
     <EmployeeLayout user={user} userId={user.id}>
       <Head title="Saved Posts" />
       <dialog ref={modalRef} className='modal'>
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Confirm Deletion</h3>
-          <p className="py-4">Are you sure you want to delete this post?</p>
+        <div className="modal-box bg-white">
+          <h3 className="font-bold text-lg text-primary">Confirm Deletion</h3>
+          <p className="py-4 text-primary border-none">Are you sure you want to delete this post?</p>
           <div className="modal-action">
-            <button className="btn" onClick={() => modalRef.current.close()}>Cancel</button>
-            <button className="btn btn-red" onClick={confirmDelete}>Delete</button>
+            <button className="btn hover:text-white" onClick={() => modalRef.current.close()}>Cancel</button>
+            <button className="btn hover:bg-red-500 hover:text-white text-primary bg-red-500 border-none" onClick={confirmDelete}>Delete</button>
           </div>
         </div>
       </dialog>

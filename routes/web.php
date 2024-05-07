@@ -138,6 +138,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/company/profile', [ProfileController::class, 'edit'])->name('company.profile.edit');
     Route::patch('/company/profile', [ProfileController::class, 'update'])->name('company.profile.update');
     Route::delete('/company/profile', [ProfileController::class, 'destroy'])->name('company.profile.destroy');
+
+    //User Profile deletion route
+    Route::delete('/company/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 // Route for registering a employee

@@ -5,6 +5,8 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, useForm } from '@inertiajs/react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ResetPassword({ token, email }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -22,7 +24,34 @@ export default function ResetPassword({ token, email }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('password.store'));
+        post(route('password.store'),{ email: data.email },{
+            onSuccess: () => {
+                // On success, show a success toast
+                toast.success('Password reset email has been sent!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+            },
+            onError: (error) => {
+                // On error, show an error toast
+                toast.error('Failed to send password reset email. Please try again later.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'light',
+                });
+            },
+        })
     };
 
     return (
@@ -78,6 +107,7 @@ export default function ResetPassword({ token, email }) {
                     </PrimaryButton>
                 </div>
             </form>
+            <ToastContainer />
         </GuestLayout>
     );
 }

@@ -13,8 +13,10 @@ const HeroSection = () => {
   return (
       // Use the Element component from react-scroll to create an anchor point for the home section
       <Element name='home' className='text-[#042b49] bg-white mt-8'>
+        
           <div className='max-w-[800px] mt-[-96px] w-full h-screen mx-auto text-center flex flex-col justify-center'>
               {/* Page title */}
+              <span className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[144px] w-[777px] bg-blue-400 rounded-full shadow-1g blur-[7rem] -z-10"></span>
               <p className='text-[#0073e6] font-bold'>GROW YOUR CAREER WITH US</p>
               <h1 className='md:text-7xl sm:text-6xl text-4xl font-bold md:py-5 m-1'>Develop your career.</h1>
               {/* Typed text animation */}

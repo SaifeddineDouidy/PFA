@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import DangerButton from '@/Components/DangerButton';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
@@ -9,7 +9,7 @@ import { useForm } from '@inertiajs/react';
 
 export default function DeleteUserForm({ className = '' }) {
     const [confirmingUserDeletion, setConfirmingUserDeletion] = useState(false);
-    const passwordInput = useRef();
+    const passwordInput = useRef(null);
 
     const {
         data,
@@ -22,6 +22,12 @@ export default function DeleteUserForm({ className = '' }) {
         password: '',
     });
 
+    useEffect(() => {
+        if (errors.password) {
+            passwordInput.current.focus();
+        }
+    }, [errors.password]);
+
     const confirmUserDeletion = () => {
         setConfirmingUserDeletion(true);
     };
@@ -29,10 +35,10 @@ export default function DeleteUserForm({ className = '' }) {
     const deleteUser = (e) => {
         e.preventDefault();
 
-        destroy(route('profile.destroy'), {
+        destroy(route('employee.profile.destroy'), {
             preserveScroll: true,
             onSuccess: () => closeModal(),
-            onError: () => passwordInput.current.focus(),
+            onError: () => {},
             onFinish: () => reset(),
         });
     };

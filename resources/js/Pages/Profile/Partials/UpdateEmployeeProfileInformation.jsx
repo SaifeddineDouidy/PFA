@@ -1,3 +1,4 @@
+
 import {useRef} from 'react'
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
@@ -143,20 +144,24 @@ export default function UpdateEmployeeProfileInformation({ mustVerifyEmail, stat
                         />
                         <InputError className="mt-2" message={errors.cin} />
                     </div>
-                    <div>
-                        <InputLabel htmlFor="educationLevel" value="Education Level" />
-                        <select
-                            id="educationLevel"
-                            name="educationLevel"
-                            value={data.educationLevel}
-                            onChange={(e) => setData('educationLevel', e.target.value)}
-                            ref={educationLevelSelectRef}
-                            className="w-full h-[35px] text-primary p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
-                        >
-                            {/* ... (options remain the same) */}
-                        </select>
-                        <InputError message={errors.educationLevel} />
-                    </div>
+                <div>
+                    <InputLabel htmlFor="educationLevel" value="Education Level" />
+                    <select
+                        id="educationLevel"
+                        name="educationLevel"
+                        value={data.educationLevel}
+                        onChange={(e) => setData('educationLevel', e.target.value)}
+                        ref={educationLevelSelectRef} // Attach ref here
+                        className="w-full text-primary p-2 border border-gray-300 rounded-md placeholder:font-light placeholder:text-gray-500"
+                    >
+                        <option value="">Select Education Level</option>
+                        <option value="Licence (BAC+3)">Licence (BAC+3)</option>
+                        <option value="Master (BAC+5)">Master (BAC+5)</option>
+                        <option value="Ingénieur (BAC+5)">Ingénieur (BAC+5)</option>
+                        <option value="Doctorat (BAC+8)">Doctorat (BAC+8)</option>
+                    </select>
+                    <InputError message={errors.educationLevel} />
+                </div>
                     <div>
                         <InputLabel htmlFor="phoneNumber" value="Num Téléphone" />
                         <PhoneInput

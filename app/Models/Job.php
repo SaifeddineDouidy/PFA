@@ -7,18 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
-    // Define the fields that are fillable
-    protected $fillable = ['jobTitle', 'minPrice', 'maxPrice', 'salaryType', 'jobLocation', 'postingDate', 'experienceLevel', 'employmentType', 'description', 'requirments'];
-    protected $table = 'company_jobs';
+    use HasFactory;
 
-    /**
-     * Define a many-to-one relationship with the Company model.
-     * This means that a Post belongs to one Company.
-     */
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-    
+    // Définissez les attributs modifiables (si nécessaire)
+    protected $fillable = [
+        'title',
+        'company_name',
+        'min_salary',
+        'max_salary',
+        'salary_type',
+        'location',
+        'posting_date',
+        'experience_level',
+        'description',
+        'posted_by',
+        // Ajoutez d'autres attributs au besoin
+    ];
 }
-

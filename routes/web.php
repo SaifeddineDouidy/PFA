@@ -14,6 +14,12 @@ use App\Models\Job;
 use App\Models\Company;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use App\Http\Controllers\MyOffersController;
+use App\Http\Controllers\CreateJobController;
+use App\Http\Controllers\GestionCandidatureController;
+
+
+
 
 // Route to get the CSRF token
 Route::get('/csrf-token', function (Request $request) {
@@ -52,12 +58,12 @@ Route::get('employee/{userId}/dashboard', function ($userId) {
 
 
 // Company dashboard route
-Route::get('/company{userId}/dashboard', function ($userId) {
-    return Inertia::render('CompanyDashboard', [
+Route::get('/company/{userId}/dashboard', function ($userId) {
+    return Inertia::render('DashboardC', [
         'userId' => $userId,
         // Pass any other data you need to your component
     ]);
-})->name('company.dashboard');
+})->name('dashboardC');
 
 
 
@@ -141,5 +147,27 @@ Route::post('/register/employee', [EmployeeController::class, 'register'])->name
 // Route for registering a company
 Route::post('/register/company', [CompanyController::class, 'register'])->name('register.company');
 
+
+
+Route::post('/createJob', [CreateJobController::class, 'store'])->name('createJob');
+
+
+
+
+    
+Route::get('/gestion-candidature', [GestionCandidatureController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('gestionCandidature');
+
+
+
+
+Route::get('/myoffers', [MyOffersController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('myOffers');
+
+
+
 // Include authentication routes from auth.php file
 require __DIR__.'/auth.php';
+

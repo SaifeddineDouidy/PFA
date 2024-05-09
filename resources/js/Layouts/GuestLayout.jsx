@@ -14,7 +14,7 @@ export default function Guest({ children }) {
                 {/* Link to the home page */}
                 <Link href="/">
                     {/* Application logo */}
-                    <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
+                    <ApplicationLogo className="w-30 h-20 fill-current text-gray-500" />
                 </Link>
             </div>
 

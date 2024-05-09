@@ -34,7 +34,7 @@ const Navbar = () => {
             {/* Logo */}
             <h1 className='text-left text-3xl font-bold text-[#0073e6]'>
                 <ScrollLink to='home' spy={true} smooth={true} duration={500}>
-                    REACT.
+                <img style={{width:"250px"}} src="/internedge.jpg" alt="InternEdge Logo" />
                 </ScrollLink>
             </h1>
             {/* Desktop navigation */}
